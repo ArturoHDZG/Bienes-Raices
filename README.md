@@ -4,6 +4,14 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
+### 0.0.1 (06/04/2023)
+
+* Updated homepage _html_.
+* Updated _SASS_ to homepage.
+* Created Card section on HTML.
+
+See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.1)
+
 ### Project Start (04/04/2023)
 
 * Added homepage and inner pages.

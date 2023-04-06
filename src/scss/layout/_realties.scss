@@ -1,0 +1,44 @@
+@include tablet {
+  .container-realties {
+    @include grid(3, 2rem);
+  }
+}
+
+.card {
+  background-color: lighten($gray, 5);
+  border: .1rem solid darken($gray, 10);
+
+  .container-realties {
+    padding: 2rem;
+  }
+
+  h3, p {
+    margin: 0%;
+  }
+
+  .price {
+    color: $green;
+    font-size: 3rem;
+    font-weight: bold;
+  }
+}
+
+.icons-amenities {
+  display: flex;
+  list-style: none;
+  padding: 0;
+
+  li {
+    flex: 1;
+    display: flex;
+
+    img {
+      flex: 0 0 3rem;
+      margin-right: 1rem;
+    }
+
+    p {
+      font-weight: $black;
+    }
+  }
+}
