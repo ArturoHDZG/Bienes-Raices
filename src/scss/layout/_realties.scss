@@ -8,7 +8,7 @@
   background-color: lighten($gray, 5);
   border: .1rem solid darken($gray, 10);
 
-  .container-realties {
+  .content-card {
     padding: 2rem;
   }
 
@@ -19,7 +19,7 @@
   .price {
     color: $green;
     font-size: 3rem;
-    font-weight: bold;
+    font-weight: $bold;
   }
 }
 
@@ -38,7 +38,12 @@
     }
 
     p {
-      font-weight: $black;
+      font-weight: $bolder;
     }
   }
+}
+
+.realty-demo {
+  color: firebrick;
+  font-size: 1.5rem;
 }

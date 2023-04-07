@@ -1,0 +1,7 @@
+.btn-realty {
+  @include button($orange, block);
+}
+
+.btn-show-realties {
+  @include button($green, inline-block);
+}

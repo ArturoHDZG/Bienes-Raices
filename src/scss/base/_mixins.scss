@@ -1,23 +1,39 @@
 /** Media Queries **/
 @mixin phone {
-    @media (min-width: #{$phone}) {
-        @content;
-    }
+  @media (min-width: #{$phone}) {
+    @content;
+  }
 }
 
 @mixin tablet {
-    @media (min-width: #{$tablet}) {
-        @content;
-    }
+  @media (min-width: #{$tablet}) {
+    @content;
+  }
 }
 
 @mixin desktop {
-    @media (min-width: #{$desktop}) {
-        @content;
-    }
+  @media (min-width: #{$desktop}) {
+    @content;
+  }
 }
+
 @mixin grid($columns, $gap) {
-    display: grid;
-    gap: $gap;
-    grid-template-columns: repeat($columns, 1fr);
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat($columns, 1fr);
+}
+
+@mixin button($bgColor, $btnDisplay) {
+  background-color: $bgColor;
+  color: $white;
+  font-weight: $bold;
+  text-align: center;
+  text-decoration: none;
+  display: $btnDisplay;
+  margin-top: calc($gap / 2);
+  padding: 1rem 3rem;
+
+  &:hover {
+    background-color: darken($bgColor, 5);
+  }
 }
