@@ -1,11 +1,12 @@
-.btn-realty {
+// Homepage buttons
+.btn-home-realstate {
   @include button($orange, block);
 }
 
-.btn-show-realties {
+.btn-home-showrealstate {
   @include button($green, inline-block);
 }
 
-.btn-contact-home {
+.btn-home-contact {
   @include button($orange, inline-block);
 }

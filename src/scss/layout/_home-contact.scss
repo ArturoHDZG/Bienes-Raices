@@ -1,12 +1,12 @@
-.no-webp .contact-image {
+.no-webp .home-contact {
   background-image: url(../img/encuentra.jpg);
 }
 
-.webp .contact-image {
+.webp .home-contact {
   background-image: url(../img/encuentra.webp);
 }
 
-.contact-image {
+.home-contact {
   display: flex;
   flex-direction: column;
   align-items: center;

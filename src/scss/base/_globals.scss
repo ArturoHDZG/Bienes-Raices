@@ -3,10 +3,12 @@ body {
     font-size: 1.6rem;
     line-height: 1.8;
 }
+
 p {
     color: $black;
     font-size: 2rem;
 }
+
 .container {
     width: 95%;
     max-width: 120rem;
@@ -33,12 +35,15 @@ h1, h2, h3 {
 h1 {
     font-size: 3.8rem;
 }
+
 h2 {
     font-size: 3.4rem;
 }
+
 h3 {
     font-size: 3rem;
 }
+
 h4 {
     font-size: 2.6rem;
 }

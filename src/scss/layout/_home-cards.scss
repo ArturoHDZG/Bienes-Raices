@@ -1,14 +1,14 @@
 @include tablet {
-  .container-realties {
+  .container-home-cards {
     @include grid(3, 2rem);
   }
 }
 
-.card {
+.home-card {
   background-color: lighten($gray, 5);
   border: .1rem solid darken($gray, 10);
 
-  .content-card {
+  .content-home-card {
     padding: 2rem;
   }
 
@@ -43,7 +43,7 @@
   }
 }
 
-.realty-demo {
+.home-text-demo {
   color: firebrick;
   font-size: 1.5rem;
 }

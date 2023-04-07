@@ -4,6 +4,14 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
+### 0.0.3 (07/04/2023)
+
+* Finished homepage _html_.
+* Finished **SASS** to homepage.
+* Finished homepage Blog & Testimonials.
+
+See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.3)
+
 ### 0.0.2 (07/04/2023)
 
 * Updated homepage _html_.

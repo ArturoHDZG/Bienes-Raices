@@ -1,10 +1,10 @@
 @include tablet {
-  .icons {
+  .home-icons {
     @include grid(3, 2rem);
   }
 }
 
-.icon {
+.home-icon {
   text-align: center;
 
   img{
