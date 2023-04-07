@@ -5,3 +5,7 @@
 .btn-show-realties {
   @include button($green, inline-block);
 }
+
+.btn-contact-home {
+  @include button($orange, inline-block);
+}
