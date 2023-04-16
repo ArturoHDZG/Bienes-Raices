@@ -1,9 +1,9 @@
 // Homepage buttons
-.btn-home-realstate {
+.btn-home-realestate {
   @include button($orange, block);
 }
 
-.btn-home-showrealstate {
+.btn-home-showrealestate {
   @include button($green, inline-block);
 }
 
