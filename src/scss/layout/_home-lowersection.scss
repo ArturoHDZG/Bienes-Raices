@@ -21,7 +21,7 @@
 }
 
 .home-blog-text {
-  a{
+  a {
     color: $black;
     display: block;
     margin-top: 2rem;
@@ -44,7 +44,9 @@
       margin-top: 1rem;
     }
   }
+}
 
+.meta-info {
   span {
     color: $orange;
   }
