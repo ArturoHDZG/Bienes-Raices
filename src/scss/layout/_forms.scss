@@ -1,0 +1,59 @@
+.form {
+  text-transform: uppercase;
+
+  p {
+    font-size: 1.4rem;
+    color: $darkGray;
+    margin: 2rem 0 0 0;
+  }
+
+  legend {
+    font-size: 2rem;
+    color: $darkGray;
+  }
+
+  label {
+    font-weight: $bold;
+  }
+
+  input:not([type="submit"]),
+  textarea, select {
+    background-color: $white;
+    padding: 1rem;
+    border: .1rem solid $gray;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  input:not(
+  [type="date"],
+  [type="time"],
+  [type="submit"]),
+  textarea, select {
+    display: block;
+    width: 100%;
+  }
+
+  textarea {
+    height: 20rem;
+  }
+
+  .form-contact {
+    max-width: 30rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  input[type="radio"] {
+    margin: 0;
+    width: auto;
+  }
+
+  label[for="time"] {
+
+    @include tablet {
+      margin-left: 3rem;
+    }
+  }
+}

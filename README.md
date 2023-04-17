@@ -4,6 +4,14 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
+### 0.1.0 (17/04/2023)
+
+* Finished _html_ on Inner Pages.
+* Finished **SASS** to Inner Pages.
+* Minor fixes.
+
+See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.1.0)
+
 ### 0.0.4 (12/04/2023)
 
 * Started _html_ on Inner Pages.

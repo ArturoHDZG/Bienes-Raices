@@ -32,8 +32,10 @@
   display: $btnDisplay;
   margin-top: calc($gap / 2);
   padding: 1rem 3rem;
+  border: none;
 
   &:hover {
     background-color: darken($bgColor, 5);
+    cursor: pointer;
   }
 }
