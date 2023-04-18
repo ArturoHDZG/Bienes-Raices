@@ -1,14 +1,17 @@
 @include tablet {
-  .container-home-cards {
+  .cards-container {
     @include grid(3, 2rem);
   }
 }
 
-.home-card {
+.card {
   background-color: lighten($gray, 5);
   border: .1rem solid darken($gray, 10);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  .content-home-card {
+  .card-content {
     padding: 2rem;
   }
 
@@ -44,7 +47,7 @@
   }
 }
 
-.home-text-demo {
+.text-demo {
   color: firebrick;
   font-size: 1.5rem;
 }
