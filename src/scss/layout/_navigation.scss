@@ -6,6 +6,7 @@
 
   @include tablet {
     flex-direction: row;
+    align-items: flex-end;
     justify-content: space-between;
   }
 }
@@ -13,7 +14,8 @@
 .navigation {
   visibility: hidden;
   opacity: 0;
-  transition: visibility .3s ease-in-out, opacity .5s linear;
+  transition: visibility .5s ease-in-out, opacity .5s linear, height .5s linear;
+  height: 0;
 
   @include tablet {
     display: flex;
@@ -40,16 +42,21 @@
 }
 
 .header-mobile-menu {
-  @include tablet {
-    display: none;
-  }
+  @include tablet { display: none; }
 
-  img {
-    width: 5rem;
-  }
+  img { width: 5rem; }
 }
 
 .header-show-navigation {
   visibility: visible;
   opacity: 1;
+  height: auto;
+}
+
+.header-darkmode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include tablet { align-items: flex-end; }
 }

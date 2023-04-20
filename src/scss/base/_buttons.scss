@@ -1,12 +1,17 @@
-// Homepage buttons
-.btn-showad {
-  @include button($orange, block);
-}
+.btn-showad { @include button($orange, block); }
 
-.btn-showrealestates {
-  @include button($green, inline-block);
-}
+.btn-showrealestates { @include button($green, inline-block); }
 
-.btn-contact {
-  @include button($orange, inline-block);
+.btn-contact { @include button($orange, inline-block); }
+
+// Dark Mode
+.btn-darkmode {
+  width: 3rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  filter: invert(100%);
+
+  &:hover { cursor: pointer; }
+
+  @include tablet { margin-top: 0; }
 }

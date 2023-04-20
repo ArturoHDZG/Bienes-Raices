@@ -36,12 +36,15 @@
           <div class="header-mobile-menu">
             <img src="build/img/barras.svg" alt="Icono Menú">
           </div>
-          <nav class="navigation" aria-label="Menú Superior">
-            <a href="about.html" rel="noopener noreferrer">Nosotros</a>
-            <a href="realestates.html" rel="noopener noreferrer">Anuncios</a>
-            <a href="blog.html" rel="noopener noreferrer">Blog</a>
-            <a href="contact.html" rel="noopener noreferrer">Contacto</a>
-          </nav>
+          <div class="header-darkmode">
+            <img class="btn-darkmode" src="build/img/dark-mode.svg" alt="Icono Modo Oscuro">
+            <nav class="navigation" aria-label="Menú Superior">
+              <a href="about.html" rel="noopener noreferrer">Nosotros</a>
+              <a href="realestates.html" rel="noopener noreferrer">Anuncios</a>
+              <a href="blog.html" rel="noopener noreferrer">Blog</a>
+              <a href="contact.html" rel="noopener noreferrer">Contacto</a>
+            </nav>
+          </div>
         </div>
         <h1>Compraventas y Alquileres</h1>
       </div>
@@ -169,15 +172,15 @@
     <div class="container section home-lowersection"> <!-- Blog, News & Testimonials -->
       <section class="home-blog"> <!-- Blog Entries -->
         <h3>Noticias</h3>
-        <article class="home-blog-entry">
-          <div class="home-blog-img">
+        <article class="blog-entry">
+          <div class="blog-image">
             <picture>
               <source srcset="build/img/blog1.webp" type="image/webp">
               <source srcset="build/img/blog1.jpg" type="image/jpeg">
               <img src="build/img/blog1.jpg" alt="Imagen Noticias" loading="lazy">
             </picture>
           </div>
-          <div class="home-blog-text">
+          <div class="blog-text">
             <a href="entry.html" rel="noopener noreferrer">
               <h4>Demo Noticia</h4>
               <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
@@ -185,15 +188,15 @@
             </a>
           </div>
         </article>
-        <article class="home-blog-entry">
-          <div class="home-blog-img">
+        <article class="blog-entry">
+          <div class="blog-image">
             <picture>
               <source srcset="build/img/blog2.webp" type="image/webp">
               <source srcset="build/img/blog2.jpg" type="image/jpeg">
               <img src="build/img/blog2.jpg" alt="Imagen Noticias" loading="lazy">
             </picture>
           </div>
-          <div class="home-blog-text">
+          <div class="blog-text">
             <a href="entry.html" rel="noopener noreferrer">
               <h4>Demo Entrada del Blog</h4>
               <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
@@ -211,7 +214,7 @@
       </section>
     </div>
     <footer class="footer section">
-      <div class="container content-footer">
+      <div class="container footer-content">
         <nav class="navigation" aria-label="Menú Inferior">
           <a href="about.html" rel="noopener noreferrer">Nosotros</a>
           <a href="realestates.html" rel="noopener noreferrer">Anuncios</a>

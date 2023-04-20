@@ -3,12 +3,18 @@
   margin-bottom: 0;
   padding: calc($gap / 2) 0;
 
-  .content-footer {
-    padding-top: calc($gap / 2);
+  .footer-content { padding-top: calc($gap / 2); }
+
+  .navigation {
+    visibility: visible;
+    opacity: 1;
+    padding-bottom: calc($gap / 2);
+    height: auto;
   }
 
   .copyright {
     color: $white;
     text-align: center;
+    font-size: 1.5rem;
   }
 }

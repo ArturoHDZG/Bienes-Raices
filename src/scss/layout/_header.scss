@@ -1,9 +1,44 @@
 .no-webp .home {
   background-image: url(../img/header.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: slider 16s infinite;
 }
 
 .webp .home {
   background-image: url(../img/header.webp);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: slider 16s infinite;
+}
+
+@keyframes slider {
+  0% {
+    background-image: url(../img/header.webp);
+    background-position: right;
+  }
+
+  25% {
+    background-image: url(../img/destacada.webp);
+    background-position: right;
+  }
+
+  50% {
+    background-image: url(../img/destacada2.webp);
+    background-position: right;
+  }
+
+  75% {
+    background-image: url(../img/destacada3.webp);
+    background-position: right;
+  }
+
+  100% {
+    background-image: url(../img/header.webp);
+    background-position: right;
+  }
 }
 
 .header {
@@ -14,14 +49,10 @@
     background-position: center center;
     background-size: cover;
 
-    @include tablet {
-      min-height: 60rem;
-    }
+    @include tablet { min-height: 60rem; }
 
     .header-content {
-      @include tablet {
-        min-height: 60rem;
-      }
+      @include tablet { min-height: 60rem; }
     }
   }
 }
@@ -38,8 +69,6 @@
     text-align: left;
   }
 
-  img {
-    max-width: 30rem;
-  }
+  img { max-width: 30rem; }
 
 }

@@ -4,6 +4,7 @@
 @import 'base/globals';
 @import 'base/utilities';
 @import 'base/buttons';
+@import 'base/darkmode';
 
 /** UI **/
 @import 'layout/header';
@@ -18,3 +19,5 @@
 
 /** Inner Pages **/
 @import 'innerpages/about';
+@import 'innerpages/blog';
+@import 'innerpages/classifiedad';

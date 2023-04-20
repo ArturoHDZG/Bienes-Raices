@@ -12,9 +12,7 @@
     color: $darkGray;
   }
 
-  label {
-    font-weight: $bold;
-  }
+  label { font-weight: $bold; }
 
   input:not([type="submit"]),
   textarea, select {
@@ -34,9 +32,7 @@
     width: 100%;
   }
 
-  textarea {
-    height: 20rem;
-  }
+  textarea { height: 20rem; }
 
   .form-contact {
     max-width: 30rem;
@@ -50,10 +46,5 @@
     width: auto;
   }
 
-  label[for="time"] {
-
-    @include tablet {
-      margin-left: 3rem;
-    }
-  }
+  label[for="time"] { margin-left: 2rem; }
 }

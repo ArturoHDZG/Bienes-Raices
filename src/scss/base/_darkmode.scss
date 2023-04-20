@@ -1,0 +1,30 @@
+.dark-mode {
+  background-color: darken($darkGray, 10);
+
+  p { color: $white; }
+
+  a, h1, h2, h3, h4 { color: $gray; }
+
+  .card { background-color: lighten($darkGray, 10); }
+
+  .price { color: $green; }
+
+  .icons-amenities {
+    img { filter: invert(100%); }
+  }
+
+  .about-text blockquote { color: $gray; }
+
+  .form {
+    legend, p { color: $gray; }
+
+    label { color: $white; }
+
+    input:not([type="submit"]),
+    textarea, select {
+      background-color: $darkGray;
+      color: $white;
+      border: .1rem solid lighten($darkGray, 10);
+    }
+  }
+}

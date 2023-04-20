@@ -1,10 +1,6 @@
-.no-webp .home-contact {
-  background-image: url(../img/encuentra.jpg);
-}
+.no-webp .home-contact { background-image: url(../img/encuentra.jpg); }
 
-.webp .home-contact {
-  background-image: url(../img/encuentra.webp);
-}
+.webp .home-contact { background-image: url(../img/encuentra.webp); }
 
 .home-contact {
   display: flex;
@@ -14,16 +10,12 @@
   background-position: center center;
   padding: calc($gap * 2) 0;
 
-  h2, p {
-    color: $white;
-  }
+  h2, p { color: $white; }
 
   h2 {
     font-size: 4rem;
     font-weight: $bolder;
   }
 
-  p {
-    font-size: 1.8rem;
-  }
+  p { font-size: 1.8rem; }
 }

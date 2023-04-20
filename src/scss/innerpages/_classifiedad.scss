@@ -1,0 +1,12 @@
+.ad-btn {
+  display: flex;
+  justify-content: center;
+
+  @include tablet { justify-content: end; }
+
+  a {
+    min-width: 90%;
+
+    @include tablet { min-width: auto; }
+  }
+}

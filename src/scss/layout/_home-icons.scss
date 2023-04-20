@@ -1,17 +1,11 @@
 @include tablet {
-  .home-icons {
-    @include grid(3, 2rem);
-  }
+  .home-icons { @include grid(3, 2rem); }
 }
 
 .home-icon {
   text-align: center;
 
-  img{
-    height: 10rem;
-  }
+  img{ height: 10rem; }
 
-  h3 {
-    text-transform: uppercase;
-  }
+  h3 { text-transform: uppercase; }
 }
