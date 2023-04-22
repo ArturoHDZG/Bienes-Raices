@@ -4,6 +4,13 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
+### 0.5.0 (21/04/2023)
+
+* Finished front.
+* Starting PHP.
+
+See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.5.0)
+
 ### 0.1.0 (17/04/2023)
 
 * Finished _html_ on Inner Pages.
