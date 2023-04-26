@@ -4,6 +4,13 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
+### 0.5.1 (25/04/2023)
+
+* _html_ to _PHP_ conversion.
+* Templates and initial configs.
+
+See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.5.0)
+
 ### 0.5.0 (21/04/2023)
 
 * Finished front.
