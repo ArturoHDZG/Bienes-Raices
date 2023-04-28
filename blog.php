@@ -15,7 +15,7 @@ includeTemplate('header');
       </picture>
     </div>
     <div class="blog-text">
-      <a href="entry.html" rel="noopener noreferrer">
+      <a href="entry.php" rel="noopener noreferrer">
         <h4>Demo Noticia</h4>
         <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
         <p>Resumen de la noticia o entrada</p>
@@ -31,7 +31,7 @@ includeTemplate('header');
       </picture>
     </div>
     <div class="blog-text">
-      <a href="entry.html" rel="noopener noreferrer">
+      <a href="entry.php" rel="noopener noreferrer">
         <h4>Demo Entrada del Blog</h4>
         <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
         <p>Resumen de la noticia o entrada</p>
@@ -47,7 +47,7 @@ includeTemplate('header');
       </picture>
     </div>
     <div class="blog-text">
-      <a href="entry.html" rel="noopener noreferrer">
+      <a href="entry.php" rel="noopener noreferrer">
         <h4>Demo Noticia</h4>
         <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
         <p>Resumen de la noticia o entrada</p>
@@ -63,7 +63,7 @@ includeTemplate('header');
       </picture>
     </div>
     <div class="blog-text">
-      <a href="entry.html" rel="noopener noreferrer">
+      <a href="entry.php" rel="noopener noreferrer">
         <h4>Demo Entrada del Blog</h4>
         <p class="meta-info">Escrito el: <span>01/04/2023</span> por: <span>Admin</span></p>
         <p>Resumen de la noticia o entrada</p>

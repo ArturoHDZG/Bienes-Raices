@@ -23,7 +23,10 @@ includeTemplate('header');
       consectetur rerum distinctio voluptas porro ducimus. Voluptas, facere cumque ipsa deserunt recusandae corrupti
       iste!</p>
   </div>
+  <div class="ad-btn">
+    <a href="blog.php" rel="noopener noreferrer" class="btn-greenInline">Volver</a>
+  </div>
 </main>
 <?php
-  includeTemplate('footer');
+includeTemplate('footer');
 ?>

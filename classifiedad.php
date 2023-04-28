@@ -27,16 +27,19 @@ includeTemplate('header');
         <p>4</p>
       </li>
     </ul>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-      aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-      occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla veniam numquam quos recusandae, alias et quasi consectetur rerum distinctio voluptas porro ducimus. Voluptas, facere cumque ipsa deserunt recusandae corrupti iste!</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+      laborum.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla veniam numquam quos recusandae, alias et quasi
+      consectetur rerum distinctio voluptas porro ducimus. Voluptas, facere cumque ipsa deserunt recusandae corrupti
+      iste!</p>
     <div class="ad-btn">
-      <a href="contact.html" rel="noopener noreferrer" class="btn-contact">Contactar</a>
+      <a href="contact.php" rel="noopener noreferrer" class="btn-greenInline">Contactar</a>
     </div>
   </div>
 </main>
 <?php
-  includeTemplate('footer');
+includeTemplate('footer');
 ?>

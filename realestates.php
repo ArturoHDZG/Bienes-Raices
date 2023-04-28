@@ -32,7 +32,7 @@ includeTemplate('header');
             <p>4</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
     <div class="card"> <!-- Card 2 -->
@@ -60,7 +60,7 @@ includeTemplate('header');
             <p>4</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
     <div class="card"> <!-- Card 3 -->
@@ -88,7 +88,7 @@ includeTemplate('header');
             <p>3</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
     <div class="card"> <!-- Card 4 -->
@@ -116,7 +116,7 @@ includeTemplate('header');
             <p>4</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
     <div class="card"> <!-- Card 5 -->
@@ -144,7 +144,7 @@ includeTemplate('header');
             <p>4</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
     <div class="card"> <!-- Card 6 -->
@@ -172,7 +172,7 @@ includeTemplate('header');
             <p>3</p>
           </li>
         </ul>
-        <a href="classifiedad.html" rel="noopener noreferrer" class="btn-showad">Ver Propiedad</a>
+        <a href="classifiedad.php" rel="noopener noreferrer" class="btn-orangeBlock">Ver Propiedad</a>
       </div>
     </div>
   </div>

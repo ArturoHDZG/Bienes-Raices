@@ -1,10 +1,10 @@
-.btn-showad { @include button($orange, block); }
+.btn-orangeBlock { @include button($orange, block); }
 
-.btn-showrealestates { @include button($green, inline-block); }
+.btn-greenInline { @include button($green, inline-block); }
 
-.btn-contact { @include button($orange, inline-block); }
+.btn-orangeInline { @include button($orange, inline-block); }
 
-// Dark Mode
+// Button Dark Mode
 .btn-darkmode {
   width: 3rem;
   margin-top: 3rem;

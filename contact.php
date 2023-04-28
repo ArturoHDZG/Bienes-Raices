@@ -33,7 +33,8 @@ includeTemplate('header');
         <option value="sell">Deseo vender o alquilar mi propiedad</option>
       </select>
       <label for="budget">Valor de la propiedad o presupuesto:</label>
-      <input id=“budget” type=“number” placeholder="ingresar presupuesto o costo" min=“0” max=“10000000” step=“0.01” value=“0.00”>
+      <input id=“budget” type=“number” placeholder="ingresar presupuesto o costo"
+       min=“0” max=“10000000” step=“0.01” value=“0.00”>
     </fieldset>
     <fieldset> <!-- Contact data -->
       <legend>Contacto</legend>
@@ -50,9 +51,9 @@ includeTemplate('header');
       <label for="time">Hora:</label>
       <input id="time" type="time" min="9:00" max="18:00" step="1800">
     </fieldset>
-    <input type="submit" value="Enviar" class="btn-showrealestates">
+    <input type="submit" value="Enviar" class="btn-greenInline">
   </form>
 </main>
 <?php
-  includeTemplate('footer');
+includeTemplate('footer');
 ?>
