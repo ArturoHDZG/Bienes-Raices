@@ -56,3 +56,16 @@ function darkMode() {
     }
   });
 }
+
+// Format currencies input
+const priceInput = document.querySelector('#price');
+
+priceInput.addEventListener('blur', () => {
+  let value = priceInput.value;
+  value = value.replace(/,/g, '');
+  if (value && !isNaN(value)) {
+    value = parseFloat(value) / 100;
+    value = value.toLocaleString('en-US', { style: 'decimal', maximumFractionDigits: 2 });
+    priceInput.value = value;
+  }
+});
