@@ -215,8 +215,8 @@ includeTemplate('header');
           <label for="currency">Moneda:</label>
           <select name="currency" id="currency">
             <option value="0" disabled selected>-- Seleccionar --</option>
-            <option value="1">CRC₡</option>
-            <option value="2">USD$</option>
+            <option value="CRC₡">Colones-CRC₡</option>
+            <option value="USD$">Dólares-USD$</option>
           </select>
         </div>
         <div class="price-section">
@@ -236,9 +236,7 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking"
-      type="number" placeholder="Ej: 3"
-      min="1" max="9" value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>

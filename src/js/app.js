@@ -59,15 +59,33 @@ function darkMode() {
 
 // Format currencies input
 const priceInput = document.querySelector('#price');
-
 if (priceInput) {
   priceInput.addEventListener('blur', () => {
     let value = priceInput.value;
     value = value.replace(/,/g, '');
     if (value && !isNaN(value)) {
-      value = parseFloat(value) / 100;
-      value = value.toLocaleString('en-US', { style: 'decimal', maximumFractionDigits: 2 });
+      value = parseFloat(value);
+      value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
       priceInput.value = value;
+    }
+  });
+}
+
+// Character counter for description form
+const description = document.querySelector('#description');
+if (description) {
+  const counter = document.createElement('div');
+  counter.classList.add('counter');
+  counter.textContent = '0/50';
+  description.parentNode.insertBefore(counter, description.nextSibling);
+
+  description.addEventListener('input', () => {
+    const length = description.value.length;
+    counter.textContent = `${length}/50`;
+    if (length >= 50) {
+      counter.style.color = 'green';
+    } else {
+      counter.style.color = '';
     }
   });
 }
