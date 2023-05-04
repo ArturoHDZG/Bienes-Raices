@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $currency = mysqli_real_escape_string($db, $_POST['currency']);
   }
   $price = mysqli_real_escape_string($db, $_POST['price']);
-  if (isset($_POST['images'])) {
-    $images = mysqli_real_escape_string($db, $_POST['images']);
+  if (isset($_FILES['images'])) {
+    $images = $_FILES['images'];
   }
   $description = mysqli_real_escape_string($db, $_POST['description']);
   $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
@@ -47,7 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $price = str_replace(',', '', $price);
 
   // define images variable
-  $images = $_FILES['images'];
+  if (isset($_FILES['images']) && is_array($_FILES['images'])) {
+    $images = $_FILES['images'];
+  } else {
+    var_dump($_FILES['images']);
+    exit;
+  }
 
   // Error warning messages
   if (!$title) {
@@ -99,6 +104,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imageSize = $images['size'][$i];
     $imageTmpName = $images['tmp_name'][$i];
     $imageError = $images['error'][$i];
+
+    // Check for upload errors
+    if ($imageError !== 0) {
+      // Handle upload error
+      $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
+    } else {
+      // Validate image size
+      $maxSize = 1000 * 1000;
+
+      // Validate image size
+      if ($imageSize > $maxSize) {
+        $errors[] = 'La imagen ' . $imageName . ' debe tener un tamaño máximo de 1MB';
+      } else {
+        // Create images folder
+        $folderImages = '../../images/';
+        if (!is_dir($folderImages)) {
+          mkdir($folderImages);
+        }
+
+        // Generate unique filename
+        do {
+          $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
+
+          // Check if file name already exists in DB
+          if ($type == 1) {
+            $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
+            $result = mysqli_query($db, $query);
+            $count = mysqli_fetch_row($result)[0];
+          } elseif ($type == 2) {
+            $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
+            $result = mysqli_query($db, $query);
+            $count = mysqli_fetch_row($result)[0];
+          }
+        } while ($count > 0);
+
+        // Upload images
+        move_uploaded_file($imageTmpName, $folderImages . $nameImage);
+
+        // Add image name to array
+        $imageNames[] = $nameImage;
+
+      }
+    }
   }
 
   // Check if image variables are defined
@@ -112,50 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imageSize = 0;
   }
 
-  // Check for upload errors
-  if ($imageError !== 0) {
-    // Handle upload error
-    $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
-  }
-
-  // Validate image size
-  $maxSize = 1000 * 1000;
-
-  // Validate image size
-  if ($imageSize > $maxSize) {
-    $errors[] = 'La imagen ' . $imageName . ' debe tener un tamaño máximo de 1MB';
-  }
-
   // Valid form
   if (empty($errors)) {
-    // Create images folder
-    $folderImages = '../../images/';
-    if (!is_dir($folderImages)) {
-      mkdir($folderImages);
-    }
-
-    // Generate unique filename
-    do {
-      $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
-
-      // Check if file name already exists in DB
-      if ($type == 1) {
-        $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
-        $result = mysqli_query($db, $query);
-        $count = mysqli_fetch_row($result)[0];
-      } elseif ($type == 2) {
-        $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
-        $result = mysqli_query($db, $query);
-        $count = mysqli_fetch_row($result)[0];
-      }
-    } while ($count > 0);
-
-    // Upload images
-    move_uploaded_file($imageTmpName, $folderImages . $nameImage);
-
-    // Add image name to array
-    $imageNames[] = $nameImage;
-
     // Convert image names array to string
     $imageNamesStr = implode(',', $imageNames);
 
@@ -184,6 +190,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       echo 'Creado con éxito';
       // Reroute to previous page
       header('Location: /admin');
+    } elseif (!$writeDB) {
+    echo "Error: " . mysqli_error($db);
     }
   }
 }
@@ -215,8 +223,8 @@ includeTemplate('header');
           <label for="currency">Moneda:</label>
           <select name="currency" id="currency">
             <option value="0" disabled selected>-- Seleccionar --</option>
-            <option value="CRC₡">Colones-CRC₡</option>
-            <option value="USD$">Dólares-USD$</option>
+            <option value="CRC ₡">Colones-CRC₡</option>
+            <option value="USD $">Dólares-USD$</option>
           </select>
         </div>
         <div class="price-section">
@@ -225,7 +233,7 @@ includeTemplate('header');
         </div>
       </div>
       <label for="images">Imágenes:</label>
-      <input id="images" type="file" accept="image/jpeg, image/png" name="images" multiple>
+      <input id="images" type="file" accept="image/jpeg, image/png" name="images[]" multiple>
       <label for="description">Descripción del Anuncio</label>
       <textarea id="description" name="description"><?php echo $description; ?></textarea>
     </fieldset>
@@ -236,7 +244,8 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9"
+      value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>
