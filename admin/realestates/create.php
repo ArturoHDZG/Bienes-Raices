@@ -86,7 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Limit number of uploaded images to 10
   $maxImages = 10;
-  $numImages = min(count($images['name']), $maxImages);
+  if (isset($images['name']) && is_array($images['name'])) {
+    $numImages = min(count($images['name']), $maxImages);
+  } else {
+    $numImages = 0;
+  }
 
   // Iterate over each uploaded image
   for ($i = 0; $i < $numImages; $i++) {
@@ -95,6 +99,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imageSize = $images['size'][$i];
     $imageTmpName = $images['tmp_name'][$i];
     $imageError = $images['error'][$i];
+  }
+
+  // Check if image variables are defined
+  if (!isset($imageError)) {
+    $imageError = 0;
+  }
+  if (!isset($imageName)) {
+    $imageName = '';
+  }
+  if (!isset($imageSize)) {
+    $imageSize = 0;
+  }
+
+  // Check for upload errors
+  if ($imageError !== 0) {
+    // Handle upload error
+    $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
   }
 
   // Validate image size
