@@ -1,0 +1,8 @@
+.btnCreate-up { margin-bottom: 2.5rem; }
+
+.btnCreate-down {
+  @include tablet {
+    display: flex;
+    justify-content: end;
+  }
+}
