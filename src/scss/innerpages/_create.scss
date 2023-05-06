@@ -1,8 +1,23 @@
-.btnCreate-up { margin-bottom: 2.5rem; }
+.btnCreate-up {
+  margin-bottom: 2.5rem;
+}
 
 .btnCreate-down {
+  display: flex;
+  justify-content: center;
+
   @include tablet {
     display: flex;
     justify-content: end;
   }
+
+  input {
+    display: block;
+    min-width: 90%;
+    @include tablet {
+      display: inline-block;
+      min-width: auto;
+    }
+  }
+
 }

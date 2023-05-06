@@ -89,3 +89,11 @@ if (description) {
     }
   });
 }
+
+// Admin index select-type query
+const selectElement = document.querySelector('.type-admin');
+if (selectElement) {
+  selectElement.addEventListener('change', () => {
+    selectElement.form.submit();
+  });
+}

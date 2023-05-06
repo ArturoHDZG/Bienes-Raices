@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // Database connection
 require_once '../../includes/config/database.php';
 $db = connectionBD();
@@ -25,7 +26,7 @@ $vendors_id = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $title = mysqli_real_escape_string($db, $_POST['title']);
   if (isset($_POST['currency'])) {
-    $currency = mysqli_real_escape_string($db, $_POST['currency']);
+    $currency = $_POST['currency'];
   }
   $price = mysqli_real_escape_string($db, $_POST['price']);
   if (isset($_FILES['images'])) {
@@ -37,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $parking = mysqli_real_escape_string($db, $_POST['parking']);
   $date = date('Y-m-d');
   if (isset($_POST['type'])) {
-    $type = mysqli_real_escape_string($db, $_POST['type']);
+    $type = $_POST['type'];
   }
   if (isset($_POST['vendors_id'])) {
-    $vendors_id = mysqli_real_escape_string($db, $_POST['vendors_id']);
+    $vendors_id = $_POST['vendors_id'];
   }
 
   // Format values
@@ -196,7 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $writeDB = mysqli_query($db, $query);
 
     if ($writeDB) {
-      header('Location: /admin?result=1');
+      header("Location: /admin?result=1");
+      exit;
     }
   }
 }
@@ -218,7 +220,7 @@ includeTemplate('header');
     </div>
   <?php endforeach; ?>
 
-  <form class="form" method="POST" action="/admin/realestates/create.php" enctype="multipart/form-data">
+  <form class="form" method="POST" action="/admin/management/create.php" enctype="multipart/form-data">
     <fieldset> <!-- Property Info -->
       <legend>Información de la Propiedad</legend>
       <label for="title">Título del Anuncio:</label>
@@ -249,7 +251,9 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number"
+      placeholder="Ej: 3" min="1" max="9"
+      value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>

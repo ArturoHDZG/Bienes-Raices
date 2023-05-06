@@ -10,3 +10,40 @@
 
   &.success { background-color: $green; }
 }
+
+.admin-topBtn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  @include tablet {
+    justify-content: flex-start;
+  }
+
+  .btn-greenInline {
+    width: 90%;
+
+    @include tablet {
+      width: auto;
+    }
+  }
+}
+
+table.table-list {
+  margin-top: 4rem;
+  width: 100%;
+  border-spacing: 0;
+
+  thead {
+    background-color: $green;
+
+    th {
+      color: $white;
+      padding: 2rem;
+    }
+  }
+
+  .table-image {
+    width: 10rem;
+  }
+}

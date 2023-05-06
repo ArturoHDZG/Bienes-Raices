@@ -1,4 +1,8 @@
+.btn-greenBlock { @include button($green, block); }
+
 .btn-orangeBlock { @include button($orange, block); }
+
+.btn-redBlock { @include button($red, block); }
 
 .btn-greenInline { @include button($green, inline-block); }
 
