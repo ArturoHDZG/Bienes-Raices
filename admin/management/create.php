@@ -1,20 +1,18 @@
 <?php
 ob_start();
-// Database connection
-require_once '../../includes/config/database.php';
-$db = connectionBD();
+//* Visual templates
+require_once '../../includes/functions.php';
 
-// Query for vendors_id
-$query = "SELECT * FROM vendors";
-$answer = mysqli_query($db, $query);
+includeTemplate('head');
+includeTemplate('header');
 
-// Form unfilled fields
-$errors = [];
-
+//* Variables
 // define variables for save input data
 $title = '';
 $currency = '';
 $price = '';
+$province = '';
+$canton = '';
 $images = '';
 $description = '';
 $rooms = '';
@@ -23,48 +21,117 @@ $parking = '';
 $type = '';
 $vendors_id = '';
 
+// define other variables
+$optionsProvince = '';
+
+// Form unfilled fields
+$errors = [];
+
+//* Database
+// Database connection
+require_once '../../includes/config/database.php';
+$db = connectionBD();
+
+// Query for vendors_id
+$query = "SELECT * FROM vendors";
+$answer = mysqli_query($db, $query);
+
+// Query for provinces
+$queryProvince = "SELECT * FROM province";
+$answerProvince = mysqli_query($db, $queryProvince);
+
+// Query for cantons
+$queryCanton = "SELECT * FROM canton";
+$answerCanton = mysqli_query($db, $queryCanton);
+
+//* Misc
+// Generate options for province select
+while ($rowProvince = mysqli_fetch_assoc($answerProvince)) {
+  $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  //* Assign values to variable by input data
   $title = mysqli_real_escape_string($db, $_POST['title']);
-  if (isset($_POST['currency'])) {
-    $currency = $_POST['currency'];
-  }
   $price = mysqli_real_escape_string($db, $_POST['price']);
-  if (isset($_FILES['images'])) {
-    $images = $_FILES['images'];
-  }
   $description = mysqli_real_escape_string($db, $_POST['description']);
   $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
   $wc = mysqli_real_escape_string($db, $_POST['wc']);
   $parking = mysqli_real_escape_string($db, $_POST['parking']);
   $date = date('Y-m-d');
+
+  if (isset($_POST['currency'])) {
+    $currency = $_POST['currency'];
+  }
+
+  if (isset($_FILES['images'])) {
+    $images = $_FILES['images'];
+  }
+
+  if (isset($_POST['province'])) {
+    $province = $_POST['province'];
+  }
+
+  if (isset($_POST['canton'])) {
+    $canton = $_POST['canton'];
+  }
+
   if (isset($_POST['type'])) {
     $type = $_POST['type'];
   }
+
   if (isset($_POST['vendors_id'])) {
     $vendors_id = $_POST['vendors_id'];
   }
 
-  // Format values
+  // Format currency input
   $price = str_replace(',', '', $price);
 
-  // define images variable
-  if (isset($_FILES['images']) && is_array($_FILES['images'])) {
-    $images = $_FILES['images'];
-  } else {
-    var_dump($_FILES['images']);
-    exit;
-  }
-
-  // Error warning messages
+  // Error messages
   if (!$title) {
     $errors[] = 'El titulo del anuncio es obligatorio';
   }
+
   if (!$currency) {
     $errors[] = 'La moneda es obligatoria';
   }
+
   if (!$price) {
     $errors[] = 'El precio del anuncio es obligatorio';
   }
+
+  if (!$province) {
+    $errors[] = 'Selecciona una provincia';
+  }
+
+  if (!$canton) {
+    $errors[] = 'Selecciona un cantón';
+  }
+
+  if (strlen($description) < 50) {
+    $errors[] = 'La descripción del anuncio es obligatorio y debe contener al menos 50 caracteres';
+  }
+
+  if (!$rooms) {
+    $errors[] = 'El número de habitaciones es obligatorio';
+  }
+
+  if (!$wc) {
+    $errors[] = 'El número de baños es obligatorio';
+  }
+
+  if (!$parking) {
+    $errors[] = 'El número de lugares de estacionamiento es obligatorio';
+  }
+
+  if (!$type) {
+    $errors[] = 'Debes seleccionar un tipo de anuncio';
+  }
+
+  if (!$vendors_id) {
+    $errors[] = 'Debes seleccionar un vendedor';
+  }
+
   $noImages = true;
   if (isset($images['name']) && is_array($images['name'])) {
     foreach ($images['name'] as $imageName) {
@@ -74,28 +141,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       }
     }
   }
+
   if ($noImages) {
     $errors[] = 'Debes agregar al menos una imagen';
   }
-  if (strlen($description) < 50) {
-    $errors[] = 'La descripción del anuncio es obligatorio y debe contener al menos 50 caracteres';
-  }
-  if (!$rooms) {
-    $errors[] = 'El número de habitaciones es obligatorio';
-  }
-  if (!$wc) {
-    $errors[] = 'El número de baños es obligatorio';
-  }
-  if (!$parking) {
-    $errors[] = 'El número de lugares de estacionamiento es obligatorio';
-  }
-  if (!$type) {
-    $errors[] = 'Debes seleccionar un tipo de anuncio';
-  }
-  if (!$vendors_id) {
-    $errors[] = 'Debes seleccionar un vendedor';
-  }
 
+  //* Images management
   // Array to store image names
   $imageNames = [];
 
@@ -107,7 +158,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $numImages = 0;
   }
 
-
+  // define images variable
+  if (isset($_FILES['images']) && is_array($_FILES['images'])) {
+    $images = $_FILES['images'];
+  } else {
+    var_dump($_FILES['images']);
+    exit;
+  }
 
   // Check if image variables are defined
   if (!isset($imageError)) {
@@ -184,13 +241,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Query into db
     if ($type == 1) {
       $query = "INSERT INTO realestates
-      (title, currency, price, images, description, rooms, wc, parking, date, vendors_id)
-      VALUES ('$title', '$currency', '$price', '$imageNamesStr', '$description', '$rooms', '$wc',
-      '$parking', '$date', '$vendors_id')";
+               (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
+      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr',
+              '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
     } elseif ($type == 2) {
-      $query = "INSERT INTO rentals (title, currency, price, images, description, rooms, wc, parking, date, vendors_id)
-      VALUES ('$title', '$currency', '$price', '$imageNamesStr', '$description', '$rooms', '$wc',
-      '$parking', '$date', '$vendors_id')";
+      $query = "INSERT INTO rentals
+               (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
+      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr',
+              '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
     }
 
     // Insert into db
@@ -198,19 +256,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($writeDB) {
       header("Location: /admin?result=1");
-      exit;
+      return;
     }
   }
 }
 
-require_once '../../includes/functions.php';
-
-includeTemplate('head');
-includeTemplate('header');
 ?>
 
 <main class="container section">
-  <h1>Nueva Propiedad</h1>
+  <h1>Crear Anuncio</h1>
   <a href="/admin" class="btn-greenInline btnCreate-up">Cancelar</a>
 
   <!-- Error alert -->
@@ -230,13 +284,28 @@ includeTemplate('header');
           <label for="currency">Moneda:</label>
           <select name="currency" id="currency">
             <option value="0" disabled selected>-- Seleccionar --</option>
-            <option value="CRC ₡">Colones-CRC₡</option>
-            <option value="USD $">Dólares-USD$</option>
+            <option value="CRC ₡" <?php echo ($currency == 'CRC ₡') ? 'selected' : ''; ?>>Colones-CRC₡</option>
+            <option value="USD $" <?php echo ($currency == 'USD $') ? 'selected' : ''; ?>>Dólares-USD$</option>
           </select>
         </div>
         <div class="price-section">
           <label for="price">Precio:</label>
           <input id="price" name="price" type="text" value="<?php echo $price; ?>">
+        </div>
+      </div>
+      <div class="location-section">
+        <div class="location-province">
+          <label for="province">Provincia:</label>
+          <select name="province" id="province">
+            <option value="0" disabled selected>-- Seleccionar --</option>
+            <?php echo $optionsProvince; ?>
+          </select>
+        </div>
+        <div class="location-canton">
+          <label for="canton">Cantón:</label>
+          <select name="canton" id="canton">
+            <option value="0" disabled selected>-- Seleccionar --</option>
+          </select>
         </div>
       </div>
       <label for="images">Imágenes:</label>
@@ -251,17 +320,16 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number"
-      placeholder="Ej: 3" min="1" max="9"
-      value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3"
+        min="1" max="9" value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>
       <label>Tipo de anuncio:</label>
       <select name="type">
         <option value="0" disabled selected>-- Seleccionar --</option>
-        <option value="1">Venta</option>
-        <option value="2">Alquiler</option>
+        <option value="1" <?php echo ($type == '1') ? 'selected' : ''; ?>>Venta</option>
+        <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Alquiler</option>
       </select>
       <label>Vendedor:</label>
       <select name="vendors_id">
