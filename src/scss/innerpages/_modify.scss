@@ -1,0 +1,12 @@
+.thumbnails-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  img {
+    border: .1rem solid $darkGray;
+    width: 15rem;
+    margin: 0 1rem 1rem 0;
+    object-fit: cover;
+  }
+}

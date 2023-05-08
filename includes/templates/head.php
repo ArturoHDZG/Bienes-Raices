@@ -25,5 +25,5 @@
   <link rel="manifest" href="/favicon/site.webmanifest">
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <link rel="stylesheet" href="/build/css/app.css">
-  <title>Bienes Raíces</title>
+  <title>Tico Casas</title>
 </head>

@@ -5,6 +5,8 @@
 
   a, h1, h2, h3, h4 { color: $gray; }
 
+  td { color: $white; }
+
   .card { background-color: lighten($darkGray, 10); }
 
   .price { color: $green; }

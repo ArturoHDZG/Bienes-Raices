@@ -47,16 +47,4 @@
   }
 
   label[for="time"] { margin-left: 2rem; }
-
-  .currency-price {
-    @include tablet {
-      display: flex;
-
-      .currency-section {
-        flex: 1;
-        margin-right: 1rem;
-      }
-      .price-section { flex: 5; }
-    }
-  }
 }

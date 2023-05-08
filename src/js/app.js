@@ -97,3 +97,40 @@ if (selectElement) {
     selectElement.form.submit();
   });
 }
+
+// Update cantons list from management
+const provinceSelect = document.querySelector('#province');
+const cantonSelect = document.querySelector('#canton');
+
+function updateCantonSelect(data) {
+  cantonSelect.innerHTML = '';
+
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '0';
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  defaultOption.textContent = '-- Seleccionar --';
+  cantonSelect.appendChild(defaultOption);
+
+  data.forEach(canton => {
+    const option = document.createElement('option');
+    option.value = canton.id;
+    option.textContent = canton.canton;
+    cantonSelect.appendChild(option);
+  });
+}
+
+if (provinceSelect) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const selectedProvinceId = provinceSelect.value;
+
+    fetch('get_cantons.php?province_id=' + selectedProvinceId)
+      .then(response => response.json())
+      .then(data => {
+        updateCantonSelect(data);
+        if (cantonValue && cantonSelect.querySelector(`option[value="${cantonValue}"]`)) {
+          cantonSelect.value = cantonValue;
+        }
+      });
+  });
+}

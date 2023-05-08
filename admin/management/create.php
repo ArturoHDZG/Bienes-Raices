@@ -1,10 +1,5 @@
 <?php
 ob_start();
-//* Visual templates
-require_once '../../includes/functions.php';
-
-includeTemplate('head');
-includeTemplate('header');
 
 //* Variables
 // define variables for save input data
@@ -255,12 +250,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $writeDB = mysqli_query($db, $query);
 
     if ($writeDB) {
-      header("Location: /admin?result=1");
-      return;
+      header("Location:/admin?result=1", true, 303);
+      exit;
     }
   }
 }
 
+
+//* Visual templates
+require_once '../../includes/functions.php';
+
+includeTemplate('head');
+includeTemplate('header');
 ?>
 
 <main class="container section">
@@ -321,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
       <input id="parking" name="parking" type="number" placeholder="Ej: 3"
-        min="1" max="9" value="<?php echo $parking; ?>">
+             min="1" max="9" value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>

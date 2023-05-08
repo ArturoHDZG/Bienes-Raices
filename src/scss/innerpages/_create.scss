@@ -21,3 +21,29 @@
   }
 
 }
+
+.currency-price {
+  @include tablet {
+    display: flex;
+
+    .currency-section {
+      flex: 2;
+      margin-right: 1rem;
+    }
+
+    .price-section { flex: 4; }
+  }
+}
+
+.location-section {
+  @include tablet {
+    display: flex;
+
+    .location-province {
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    .location-canton { flex: 1; }
+  }
+}
