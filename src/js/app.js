@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   responsiveMenu();
   darkMode();
+  initImageUpload();
 })
 
 // Responsive navigation
@@ -79,6 +80,15 @@ if (description) {
   counter.textContent = '0/50';
   description.parentNode.insertBefore(counter, description.nextSibling);
 
+  // Actualizar contador al cargar la página
+  const length = description.value.length;
+  counter.textContent = `${length}/50`;
+  if (length >= 50) {
+    counter.style.color = 'green';
+  } else {
+    counter.style.color = '';
+  }
+
   description.addEventListener('input', () => {
     const length = description.value.length;
     counter.textContent = `${length}/50`;
@@ -132,5 +142,83 @@ if (provinceSelect) {
           cantonSelect.value = cantonValue;
         }
       });
+
+    provinceSelect.addEventListener('change', () => {
+      const selectedProvinceId = provinceSelect.value;
+
+      fetch('get_cantons.php?province_id=' + selectedProvinceId)
+        .then(response => response.json())
+        .then(data => {
+          updateCantonSelect(data);
+        });
+    });
   });
+}
+
+function initImageUpload() {
+  // Obtener referencia al input de tipo file
+  const input = document.querySelector('#images');
+
+  // Verificar si el input existe en la página
+  if (input) {
+    // Obtener referencia al contenedor de miniaturas
+    const container = document.querySelector('.thumbnails-container');
+
+    // Definir número máximo de imágenes permitidas
+    const maxImages = 10;
+
+    // Obtener referencia al elemento del contador de imágenes
+    const counterElement = document.querySelector('#image-counter');
+
+    // Inicializar contenido del contador
+    counterElement.textContent = `0 / ${maxImages}`;
+
+    // Contar cuántas imágenes están guardadas en la base de datos
+    const numImages = container.querySelectorAll('img').length;
+
+    // Actualizar contador
+    counterElement.textContent = `${numImages} / ${maxImages}`;
+    if (numImages > maxImages) {
+      counterElement.style.color = 'red';
+    } else {
+      counterElement.style.color = 'green';
+    }
+
+    // Escuchar cambios en el input
+    input.addEventListener('change', (event) => {
+      // Obtener lista de archivos seleccionados
+      const files = event.target.files;
+
+      // Actualizar contador
+      counterElement.textContent = `${files.length} / ${maxImages}`;
+      if (files.length > maxImages) {
+        counterElement.style.color = 'red';
+      } else {
+        counterElement.style.color = 'green';
+      }
+
+      // Crear un elemento img para cada archivo seleccionado
+      for (const file of files) {
+        // Crear elemento div
+        const div = document.createElement('div');
+        div.classList.add('thumbnail');
+
+        // Crear elemento img
+        const img = document.createElement('img');
+        img.classList.add('thumb');
+        img.file = file;
+
+        // Agregar elemento img al div
+        div.appendChild(img);
+
+        // Agregar elemento div al contenedor de miniaturas
+        container.appendChild(div);
+
+        // Leer contenido del archivo y asignarlo como src del elemento img
+        const reader = new FileReader();
+        reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 }

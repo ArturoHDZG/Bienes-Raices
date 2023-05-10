@@ -74,7 +74,9 @@ if ($tableName == 'realestates') {
 $propertyImages = $property['images'];
 $imagesArray = explode(",", $propertyImages);
 foreach ($imagesArray as $image) {
-  echo '<img src="/images/' . $image . '" alt="Miniatura de la propiedad">';
+  echo '<div class="thumbnail">';
+  echo '<img class="thumb" src="/images/' . $image . '" alt="Miniatura de la propiedad">';
+  echo '</div>';
 }
 $imagesOutput = ob_get_contents();
 ob_clean();
@@ -353,9 +355,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-// Send $canton value to app.js to use in fetch canton menu
-echo "<script>var cantonValue = '$canton';</script>";
-
 //* Visual templates
 require_once '../../includes/functions.php';
 
@@ -406,10 +405,12 @@ includeTemplate('header');
           <select name="canton" id="canton">
             <option value="0" disabled selected>-- Seleccionar --</option>
           </select>
+          <input type="hidden" id="cantonValue" value="<?php echo $cantonValue; ?>">
         </div>
       </div>
       <label for="images">Imágenes:</label>
       <input id="images" type="file" accept="image/jpeg, image/png" name="images[]" multiple>
+      <p id="image-counter"></p>
       <div class="thumbnails-container">
         <?php echo $imagesOutput; ?>
       </div>
@@ -423,8 +424,7 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3"
-              min="1" max="9" value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>

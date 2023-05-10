@@ -256,7 +256,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-
 //* Visual templates
 require_once '../../includes/functions.php';
 
@@ -307,10 +306,13 @@ includeTemplate('header');
           <select name="canton" id="canton">
             <option value="0" disabled selected>-- Seleccionar --</option>
           </select>
+          <input type="hidden" id="cantonValue" value="<?php echo $cantonValue; ?>">
         </div>
       </div>
       <label for="images">Imágenes:</label>
       <input id="images" type="file" accept="image/jpeg, image/png" name="images[]" multiple>
+      <p id="image-counter"></p>
+      <div class="thumbnails-container"></div>
       <label for="description">Descripción del Anuncio</label>
       <textarea id="description" name="description"><?php echo $description; ?></textarea>
     </fieldset>
@@ -321,8 +323,7 @@ includeTemplate('header');
       <label for="wc">Baños:</label>
       <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3"
-             min="1" max="9" value="<?php echo $parking; ?>">
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
     </fieldset>
     <fieldset> <!-- Extra Info -->
       <legend>Información Extra</legend>
