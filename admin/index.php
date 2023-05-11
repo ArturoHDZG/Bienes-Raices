@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 // Database connection
 require_once '../includes/config/database.php';
 $db = connectionBD();
@@ -35,6 +37,32 @@ if (isset($_GET['type'])) {
 // Show property creation message
 $message = $_GET['result'] ?? null;
 
+// Delete properties
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $id = $_POST['id'];
+  $id = filter_var($id, FILTER_VALIDATE_INT);
+
+  if ($type == '1' && $id) {
+    $query = "DELETE FROM realestates WHERE id = {$id}";
+    $queryImages = "SELECT images FROM realestates WHERE id = {$id}";
+  } elseif ($type == '2' && $id) {
+    $query = "DELETE FROM rentals WHERE id = {$id}";
+    $queryImages = "SELECT images FROM rentals WHERE id = {$id}";
+  }
+
+  $answerImages = mysqli_query($db, $queryImages);
+  $property = mysqli_fetch_assoc($answerImages);
+  $images = explode(',', $property['images']);
+  foreach ($images as $image) {
+    unlink('../images/' . $image);
+  }
+  $answer = mysqli_query($db, $query);
+
+  if ($answer) {
+    header("Location:/admin?result=3", true, 303);
+  }
+}
+
 // Templates
 require_once '../includes/functions.php';
 
@@ -44,10 +72,12 @@ includeTemplate('header');
 
 <main class="container section">
   <h1>Administrador de Anuncios</h1>
-  <?php if (intval($message) === 1): ?>
+  <?php if (intval($message) === 1) : ?>
     <p class="alert success">¡Anuncio creado correctamente!</p>
-    <?php elseif (intval($message) === 2): ?>
-      <p class="alert success">¡Anuncio actualizado correctamente!</p>
+  <?php elseif (intval($message) === 2) : ?>
+    <p class="alert success">¡Anuncio actualizado correctamente!</p>
+  <?php elseif (intval($message) === 3) : ?>
+    <p class="alert success">¡Anuncio eliminado correctamente!</p>
   <?php endif; ?>
   <div class="admin-topBtn">
     <a href="/admin/management/create.php" class="btn-greenInline">Nuevo Anuncio</a>
@@ -93,8 +123,10 @@ includeTemplate('header');
             <td><?php echo $property['currency']; ?></td>
             <td><?php echo number_format($property['price'], 2, '.', ','); ?></td>
             <td>
-              <a class="btn-redBlock" href="management/delete.php?id=<?php echo $property['id']; ?>
-                  &table_name=<?php echo $tableName; ?>" ">Eliminar</a>
+              <form class="form" method="POST">
+                <input type="hidden" name="id" value="<?php echo $property['id']; ?>">
+                <input type="submit" class="btn-redBlock" value="Eliminar">
+              </form>
               <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property['id']; ?>
                   &table_name=<?php echo $tableName; ?>">Modificar</a>
             </td>

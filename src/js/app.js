@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
   responsiveMenu();
   darkMode();
   initImageUpload();
+  initDeleteEvents();
 })
 
 // Responsive navigation
@@ -158,24 +159,18 @@ if (provinceSelect) {
 function initImageUpload() {
   // Obtener referencia al input de tipo file
   const input = document.querySelector('#images');
-
   // Verificar si el input existe en la página
   if (input) {
     // Obtener referencia al contenedor de miniaturas
     const container = document.querySelector('.thumbnails-container');
-
     // Definir número máximo de imágenes permitidas
     const maxImages = 10;
-
     // Obtener referencia al elemento del contador de imágenes
     const counterElement = document.querySelector('#image-counter');
-
     // Inicializar contenido del contador
     counterElement.textContent = `0 / ${maxImages}`;
-
     // Contar cuántas imágenes están guardadas en la base de datos
     const numImages = container.querySelectorAll('img').length;
-
     // Actualizar contador
     counterElement.textContent = `${numImages} / ${maxImages}`;
     if (numImages > maxImages) {
@@ -188,10 +183,11 @@ function initImageUpload() {
     input.addEventListener('change', (event) => {
       // Obtener lista de archivos seleccionados
       const files = event.target.files;
-
+      // Contar cuántas imágenes están guardadas en la base de datos
+      const numImages = container.querySelectorAll('img').length;
       // Actualizar contador
-      counterElement.textContent = `${files.length} / ${maxImages}`;
-      if (files.length > maxImages) {
+      counterElement.textContent = `${numImages + files.length} / ${maxImages}`;
+      if (numImages + files.length > maxImages) {
         counterElement.style.color = 'red';
       } else {
         counterElement.style.color = 'green';
@@ -202,14 +198,35 @@ function initImageUpload() {
         // Crear elemento div
         const div = document.createElement('div');
         div.classList.add('thumbnail');
-
         // Crear elemento img
         const img = document.createElement('img');
         img.classList.add('thumb');
         img.file = file;
-
         // Agregar elemento img al div
         div.appendChild(img);
+
+        // Crear elemento span
+        const span = document.createElement('span');
+        span.classList.add('delete');
+        span.textContent = 'x';
+
+        // Agregar evento click al elemento span
+        span.addEventListener('click', function () {
+          // Eliminar miniatura
+          div.remove();
+
+          // Actualizar contador de imágenes
+          const numImages = container.querySelectorAll('img').length;
+          counterElement.textContent = `${numImages} / ${maxImages}`;
+          if (numImages > maxImages) {
+            counterElement.style.color = 'red';
+          } else {
+            counterElement.style.color = 'green';
+          }
+        });
+
+        // Agregar elemento span al div
+        div.appendChild(span);
 
         // Agregar elemento div al contenedor de miniaturas
         container.appendChild(div);
@@ -221,4 +238,37 @@ function initImageUpload() {
       }
     });
   }
+}
+
+// Delete preload images from server
+function initDeleteEvents() {
+  // Obtener referencia al contenedor de miniaturas
+  const container = document.querySelector('.thumbnails-container');
+  // Obtener referencia al elemento del contador de imágenes
+  const counterElement = document.querySelector('#image-counter');
+  // Definir número máximo de imágenes permitidas
+  const maxImages = 10;
+  // Obtener todos los elementos span con clase delete
+  const deleteElements = container.querySelectorAll('.delete');
+  // Agregar evento click a cada elemento span
+  deleteElements.forEach(span => {
+    span.addEventListener('click', function () {
+      // Eliminar miniatura
+      span.parentElement.remove();
+      // Actualizar contador de imágenes
+      const numImages = container.querySelectorAll('img').length;
+      counterElement.textContent = `${numImages} / ${maxImages}`;
+      if (numImages > maxImages) {
+        counterElement.style.color = 'red';
+      } else {
+        counterElement.style.color = 'green';
+      }
+      // Obtener nombre de la imagen a eliminar
+      const imageName = span.previousElementSibling.src.split('/').pop();
+      // Obtener referencia al campo oculto
+      const input = document.querySelector('#imagesToDelete');
+      // Agregar nombre de la imagen al campo oculto
+      input.value += `${imageName},`;
+    });
+  });
 }

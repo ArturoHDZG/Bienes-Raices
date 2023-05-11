@@ -1,11 +1,17 @@
 .section {
-    margin-top: calc($gap / 2);
-    margin-bottom: calc($gap / 2);
+  margin-top: calc($gap / 2);
+  margin-bottom: calc($gap / 2);
 }
 
 .content-center { max-width: 80rem; }
 
 .show-realestate {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// Convert X to cursor
+.delete {
+  text-align: center;
+  cursor: pointer;
 }

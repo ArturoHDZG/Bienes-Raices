@@ -75,9 +75,11 @@ $propertyImages = $property['images'];
 $imagesArray = explode(",", $propertyImages);
 foreach ($imagesArray as $image) {
   echo '<div class="thumbnail">';
-  echo '<img class="thumb" src="/images/' . $image . '" alt="Miniatura de la propiedad">';
+  echo '<img class="thumb" src="/images/' . $image . '" data-image="' . $image . '" alt="Miniatura de la propiedad">';
+  echo '<span class="delete">x</span>';
   echo '</div>';
 }
+
 $imagesOutput = ob_get_contents();
 ob_clean();
 
@@ -298,6 +300,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imageNamesStr = implode(',', $allImagesArray);
     $imageNamesStr = trim($imageNamesStr, ',');
 
+    // Obtener los nombres de las imágenes a eliminar del campo oculto imagesToDelete
+    $imagesToDelete = $_POST['imagesToDelete'];
+
+    // Convertir la cadena en un arreglo
+    $imagesToDeleteArray = explode(',', $imagesToDelete);
+
+    // Remove empty strings from the array
+    $imagesToDeleteArray = array_filter($imagesToDeleteArray);
+
+    // Iterate over the array and delete each image from the server
+    foreach ($imagesToDeleteArray as $imageName) {
+      unlink($folderImages . $imageName);
+    }
+
+    // Convertir la cadena de imágenes en un arreglo
+    $imagesArray = explode(',', $imageNamesStr);
+
+    // Eliminar los nombres de las imágenes del arreglo
+    $imagesArray = array_diff($imagesArray, $imagesToDeleteArray);
+
+    // Convertir el arreglo resultante en una cadena
+    $imageNamesStr = implode(',', $imagesArray);
+
     $typeChanged = ($originalType != $type);
 
     // Query into db
@@ -414,6 +439,7 @@ includeTemplate('header');
       <div class="thumbnails-container">
         <?php echo $imagesOutput; ?>
       </div>
+      <input type="hidden" name="imagesToDelete" id="imagesToDelete" value="">
       <label for="description">Descripción del Anuncio</label>
       <textarea id="description" name="description"><?php echo $description; ?></textarea>
     </fieldset>
