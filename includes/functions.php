@@ -15,6 +15,12 @@ function loginOn() : bool
   session_start();
   $auth = $_SESSION['login'];
 
+  if (!isset($_SESSION['login'])) {
+
+    $_SESSION['login'] = '';
+
+  }
+
   if ($auth) {
 
     return true;

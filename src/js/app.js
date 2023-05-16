@@ -1,13 +1,6 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', function () {
-  responsiveMenu();
-  darkMode();
-  initImageUpload();
-  initDeleteEvents();
-})
-
-// Responsive navigation
+//* Responsive navigation
 function responsiveMenu() {
   const mobileMenu = document.querySelector('.header-mobile-menu');
 
@@ -17,7 +10,7 @@ function responsiveMenu() {
   });
 }
 
-// Dark Mode
+//* Dark Mode
 function darkMode() {
   const preferDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -59,38 +52,32 @@ function darkMode() {
   });
 }
 
-// Format currencies input
-const priceInput = document.querySelector('#price');
-if (priceInput) {
-  priceInput.addEventListener('blur', () => {
-    let value = priceInput.value;
-    value = value.replace(/,/g, '');
-    if (value && !isNaN(value)) {
-      value = parseFloat(value);
-      value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      priceInput.value = value;
-    }
-  });
+//* Format currencies input
+function formatCurrencyInput() {
+  const priceInput = document.querySelector('#price');
+  if (priceInput) {
+    priceInput.addEventListener('blur', () => {
+      let value = priceInput.value;
+      value = value.replace(/,/g, '');
+      if (value && !isNaN(value)) {
+        value = parseFloat(value);
+        value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        priceInput.value = value;
+      }
+    });
+  }
 }
 
-// Character counter for description form
-const description = document.querySelector('#description');
-if (description) {
-  const counter = document.createElement('div');
-  counter.classList.add('counter');
-  counter.textContent = '0/50';
-  description.parentNode.insertBefore(counter, description.nextSibling);
+//* Character counter for description form
+function descriptionCounter() {
+  const description = document.querySelector('#description');
+  if (description) {
+    const counter = document.createElement('div');
+    counter.classList.add('counter');
+    counter.textContent = '0/50';
+    description.parentNode.insertBefore(counter, description.nextSibling);
 
-  // Actualizar contador al cargar la página
-  const length = description.value.length;
-  counter.textContent = `${length}/50`;
-  if (length >= 50) {
-    counter.style.color = 'green';
-  } else {
-    counter.style.color = '';
-  }
-
-  description.addEventListener('input', () => {
+    // Actualizar contador al cargar la página
     const length = description.value.length;
     counter.textContent = `${length}/50`;
     if (length >= 50) {
@@ -98,22 +85,60 @@ if (description) {
     } else {
       counter.style.color = '';
     }
-  });
+
+    description.addEventListener('input', () => {
+      const length = description.value.length;
+      counter.textContent = `${length}/50`;
+      if (length >= 50) {
+        counter.style.color = 'green';
+      } else {
+        counter.style.color = '';
+      }
+    });
+  }
 }
 
-// Admin index select-type query
-const selectElement = document.querySelector('.type-admin');
-if (selectElement) {
-  selectElement.addEventListener('change', () => {
-    selectElement.form.submit();
-  });
+//* Admin index select-type query
+function adminIndexSelectTypeQuery() {
+  const selectElement = document.querySelector('.type-admin');
+  if (selectElement) {
+    selectElement.addEventListener('change', () => {
+      selectElement.form.submit();
+    });
+  }
 }
 
-// Update cantons list from management
-const provinceSelect = document.querySelector('#province');
-const cantonSelect = document.querySelector('#canton');
+//* Update cantons list from management
+function initCantonSelect() {
+  const provinceSelect = document.querySelector('#province');
+  const cantonSelect = document.querySelector('#canton');
 
-function updateCantonSelect(data) {
+  if (provinceSelect) {
+    const selectedProvinceId = provinceSelect.value;
+
+    fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+      .then(response => response.json())
+      .then(data => {
+        updateCantonSelect(data, cantonSelect);
+        if (cantonValue && cantonSelect.querySelector(`option[value="${cantonValue}"]`)) {
+          cantonSelect.value = cantonValue;
+        }
+      });
+
+    provinceSelect.addEventListener('change', () => {
+      const selectedProvinceId = provinceSelect.value;
+
+      fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+        .then(response => response.json())
+        .then(data => {
+          updateCantonSelect(data, cantonSelect);
+        });
+    });
+  }
+}
+
+// Updates the canton select element with the given data
+function updateCantonSelect(data, cantonSelect) {
   cantonSelect.innerHTML = '';
 
   const defaultOption = document.createElement('option');
@@ -131,156 +156,122 @@ function updateCantonSelect(data) {
   });
 }
 
-if (provinceSelect) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const selectedProvinceId = provinceSelect.value;
-
-    fetch('get_cantons.php?province_id=' + selectedProvinceId)
-      .then(response => response.json())
-      .then(data => {
-        updateCantonSelect(data);
-        if (cantonValue && cantonSelect.querySelector(`option[value="${cantonValue}"]`)) {
-          cantonSelect.value = cantonValue;
-        }
-      });
-
-    provinceSelect.addEventListener('change', () => {
-      const selectedProvinceId = provinceSelect.value;
-
-      fetch('get_cantons.php?province_id=' + selectedProvinceId)
-        .then(response => response.json())
-        .then(data => {
-          updateCantonSelect(data);
-        });
-    });
-  });
-}
-
+//* Initializes the image upload functionality by adding an event listener to the file input and creating thumbnails for the selected image files
 function initImageUpload() {
-  // Obtener referencia al input de tipo file
   const input = document.querySelector('#images');
-  // Verificar si el input existe en la página
+  const container = document.querySelector('.thumbnails-container');
+  const maxImages = 10;
+  const counterElement = document.querySelector('#image-counter');
+
   if (input) {
-    // Obtener referencia al contenedor de miniaturas
-    const container = document.querySelector('.thumbnails-container');
-    // Definir número máximo de imágenes permitidas
-    const maxImages = 10;
-    // Obtener referencia al elemento del contador de imágenes
-    const counterElement = document.querySelector('#image-counter');
-    // Inicializar contenido del contador
-    counterElement.textContent = `0 / ${maxImages}`;
-    // Contar cuántas imágenes están guardadas en la base de datos
-    const numImages = container.querySelectorAll('img').length;
-    // Actualizar contador
-    counterElement.textContent = `${numImages} / ${maxImages}`;
-    if (numImages > maxImages) {
-      counterElement.style.color = 'red';
-    } else {
-      counterElement.style.color = 'green';
-    }
-
-    // Escuchar cambios en el input
+    updateImageCounter(container, counterElement, maxImages);
     input.addEventListener('change', (event) => {
-      // Obtener lista de archivos seleccionados
       const files = event.target.files;
-      // Contar cuántas imágenes están guardadas en la base de datos
-      const numImages = container.querySelectorAll('img').length;
-      // Actualizar contador
-      counterElement.textContent = `${numImages + files.length} / ${maxImages}`;
-      if (numImages + files.length > maxImages) {
-        counterElement.style.color = 'red';
-      } else {
-        counterElement.style.color = 'green';
-      }
-
-      // Crear un elemento img para cada archivo seleccionado
-      for (const file of files) {
-        // Crear elemento div
-        const div = document.createElement('div');
-        div.classList.add('thumbnail');
-        // Crear elemento img
-        const img = document.createElement('img');
-        img.classList.add('thumb');
-        img.file = file;
-        // Agregar elemento img al div
-        div.appendChild(img);
-
-        // Crear elemento span
-        const span = document.createElement('span');
-        span.classList.add('delete');
-        span.textContent = 'x';
-
-        // Agregar evento click al elemento span
-        span.addEventListener('click', function () {
-          // Eliminar miniatura
-          div.remove();
-
-          // Actualizar contador de imágenes
-          const numImages = container.querySelectorAll('img').length;
-          counterElement.textContent = `${numImages} / ${maxImages}`;
-          if (numImages > maxImages) {
-            counterElement.style.color = 'red';
-          } else {
-            counterElement.style.color = 'green';
-          }
-        });
-
-        // Agregar elemento span al div
-        div.appendChild(span);
-
-        // Agregar elemento div al contenedor de miniaturas
-        container.appendChild(div);
-
-        // Leer contenido del archivo y asignarlo como src del elemento img
-        const reader = new FileReader();
-        reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
-        reader.readAsDataURL(file);
-      }
+      updateImageCounter(container, counterElement, maxImages, files.length);
+      createThumbnails(files, container);
     });
   }
 }
 
-// Delete preload images from server
+// Updates the image counter with the current number of images
+function updateImageCounter(container, counterElement, maxImages, additionalImages = 0) {
+  const numImages = container.querySelectorAll('img').length + additionalImages;
+  counterElement.textContent = `${numImages} / ${maxImages}`;
+  if (numImages > maxImages) {
+    counterElement.style.color = 'red';
+  } else {
+    counterElement.style.color = 'green';
+  }
+}
+
+// Creates thumbnails for the selected image files
+function createThumbnails(files, container) {
+  for (const file of files) {
+    const div = createThumbnailDiv();
+    const img = createThumbnailImg(file);
+    div.appendChild(img);
+    const span = createThumbnailSpan(div);
+    div.appendChild(span);
+    container.appendChild(div);
+    readImageFile(file, img);
+  }
+}
+
+// Creates a new thumbnail div element
+function createThumbnailDiv() {
+  const div = document.createElement('div');
+  div.classList.add('thumbnail');
+  return div;
+}
+
+// Creates a new thumbnail img element for the given file
+function createThumbnailImg(file) {
+  const img = document.createElement('img');
+  img.classList.add('thumb');
+  img.file = file;
+  return img;
+}
+
+// Creates a new thumbnail span element for deleting the thumbnail
+function createThumbnailSpan(div) {
+  const span = document.createElement('span');
+  span.classList.add('delete');
+  span.textContent = 'x';
+  span.addEventListener('click', function () {
+    div.remove();
+    updateImageCounter(container, counterElement, maxImages);
+  });
+  return span;
+}
+
+// Reads the given image file and sets the img element's src to the file's data
+function readImageFile(file, img) {
+  const reader = new FileReader();
+  reader.onload = (function (aImg) {
+    return function (e) {
+      aImg.src = e.target.result;
+    };
+  })(img);
+  reader.readAsDataURL(file);
+}
+
+//* Delete preload images from server
 function initDeleteEvents() {
-  // Obtener referencia al contenedor de miniaturas
   const container = document.querySelector('.thumbnails-container');
-  // Verificar si el contenedor existe
+
   if (!container) {
-    // Si el contenedor no existe, salir de la función
     return;
   }
-  // Obtener referencia al elemento del contador de imágenes
+
   const counterElement = document.querySelector('#image-counter');
-  // Definir número máximo de imágenes permitidas
   const maxImages = 10;
-  // Obtener todos los elementos span con clase delete
   const deleteElements = container.querySelectorAll('.delete');
-  // Agregar evento click a cada elemento span
+
   deleteElements.forEach(span => {
+
     span.addEventListener('click', function () {
-      // Eliminar miniatura
       span.parentElement.remove();
-      // Actualizar contador de imágenes
       const numImages = container.querySelectorAll('img').length;
       counterElement.textContent = `${numImages} / ${maxImages}`;
+
       if (numImages > maxImages) {
         counterElement.style.color = 'red';
       } else {
         counterElement.style.color = 'green';
       }
-      // Obtener nombre de la imagen a eliminar
+
       const imageName = span.previousElementSibling.src.split('/').pop();
-      // Obtener referencia al campo oculto
       const input = document.querySelector('#imagesToDelete');
-      // Agregar nombre de la imagen al campo oculto
       input.value += `${imageName},`;
     });
   });
 }
 
+//* Gallery for add images
 function initImageGallery() {
   const mainImage = document.querySelector('#main-image');
   const thumbnails = document.querySelectorAll('.thumbnail');
+
   if (mainImage && thumbnails.length > 0) {
     thumbnails.forEach(thumbnail => {
       thumbnail.addEventListener('click', () => {
@@ -290,6 +281,15 @@ function initImageGallery() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+//* DOMContentLoaded controller
+document.addEventListener('DOMContentLoaded', function () {
+  responsiveMenu();
+  darkMode();
+  formatCurrencyInput();
+  descriptionCounter();
+  adminIndexSelectTypeQuery();
+  initCantonSelect();
+  initImageUpload();
+  initDeleteEvents();
   initImageGallery();
 });

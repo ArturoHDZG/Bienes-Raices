@@ -67,16 +67,16 @@ $auth = $_SESSION['login'] ?? false;
 
             <nav class="navigation" aria-label="Menú Superior">
 
-              <a href="about.php" rel="noopener noreferrer">Nosotros</a>
-              <a href="realestates.php" rel="noopener noreferrer">Anuncios</a>
-              <a href="blog.php" rel="noopener noreferrer">Blog</a>
-              <a href="contact.php" rel="noopener noreferrer">Contacto</a>
+              <a href="/about.php" rel="noopener noreferrer">Nosotros</a>
+              <a href="/realestates.php" rel="noopener noreferrer">Anuncios</a>
+              <a href="/blog.php" rel="noopener noreferrer">Blog</a>
+              <a href="/contact.php" rel="noopener noreferrer">Contacto</a>
 
               <?php if ($auth) : ?>
                 <a href="/admin/index.php" rel="noopener noreferrer">Administrar</a>
-                <a href="logout.php" rel="noopener noreferrer">Cerrar Sesión</a>
+                <a href="/logout.php" rel="noopener noreferrer">Cerrar Sesión</a>
               <?php else : ?>
-                <a href="login.php" rel="noopener noreferrer">Iniciar Sesión</a>
+                <a href="/login.php" rel="noopener noreferrer">Iniciar Sesión</a>
               <?php endif; ?>
 
             </nav>
