@@ -13,42 +13,35 @@ function responsiveMenu() {
 //* Dark Mode
 function darkMode() {
   const preferDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+  const btnDarkMode = document.querySelector('.btn-darkmode');
+  const htmlEl = document.documentElement;
 
-  // Get color scheme from localStorage
-  if (localStorage.getItem('color-mode') === 'true') {
-    document.body.classList.add('dark-mode');
-  } else if (localStorage.getItem('color-mode') === 'false') {
-    document.body.classList.remove('dark-mode');
-  } else {
-    // Reads user preferences
-    if (preferDarkMode.matches) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
+  // Toggle dark mode class on html
+  function toggleDarkMode() {
+    htmlEl.classList.toggle('dark-mode');
   }
 
-  // Listening for user preference changes
-  preferDarkMode.addEventListener('change', function () {
-    if (preferDarkMode.matches) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  });
+  // Set dark mode based on user preference
+  function setDarkMode() {
+    const darkModeOn = localStorage.getItem('color-mode') === 'true' || preferDarkMode.matches;
+    htmlEl.classList.toggle('dark-mode', darkModeOn);
+  }
 
-  // Dark Mode button
-  const btnDarkMode = document.querySelector('.btn-darkmode');
+  // Save manual preferences
+  function savePreferences() {
+    localStorage.setItem('color-mode', htmlEl.classList.contains('dark-mode'));
+  }
 
-  btnDarkMode.addEventListener('click', function () {
-    document.body.classList.toggle('dark-mode');
+  // Set initial dark mode
+  setDarkMode();
 
-    // Save manual preferences
-    if (document.body.classList.contains('dark-mode')) {
-      localStorage.setItem('color-mode', 'true');
-    } else {
-      localStorage.setItem('color-mode', 'false');
-    }
+  // Listen for user preference changes
+  preferDarkMode.addEventListener('change', setDarkMode);
+
+  // Listen for dark mode button click
+  btnDarkMode.addEventListener('click', () => {
+    toggleDarkMode();
+    savePreferences();
   });
 }
 
