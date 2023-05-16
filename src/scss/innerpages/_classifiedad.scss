@@ -1,4 +1,17 @@
-.ad-btn {
+.ad-btnUpper {
+  display: flex;
+  justify-content: center;
+
+  @include tablet { justify-content: start; }
+
+  a {
+    min-width: 90%;
+
+    @include tablet { min-width: auto; }
+  }
+}
+
+.ad-btnLower {
   display: flex;
   justify-content: center;
 
@@ -8,5 +21,27 @@
     min-width: 90%;
 
     @include tablet { min-width: auto; }
+  }
+}
+
+#main-image {
+  width: 100%;
+  height: auto;
+}
+
+#thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+
+  .thumbnail {
+    width: calc(25% - 1rem);
+    height: auto;
+    margin: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }

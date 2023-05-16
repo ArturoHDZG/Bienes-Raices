@@ -1,5 +1,6 @@
 <?php
 
+// DB connection
 function connectionBD() : mysqli
 {
   $db = mysqli_connect('localhost', 'root', 'root', 'tico_casas_db');

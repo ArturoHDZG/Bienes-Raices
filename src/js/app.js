@@ -244,6 +244,11 @@ function initImageUpload() {
 function initDeleteEvents() {
   // Obtener referencia al contenedor de miniaturas
   const container = document.querySelector('.thumbnails-container');
+  // Verificar si el contenedor existe
+  if (!container) {
+    // Si el contenedor no existe, salir de la función
+    return;
+  }
   // Obtener referencia al elemento del contador de imágenes
   const counterElement = document.querySelector('#image-counter');
   // Definir número máximo de imágenes permitidas
@@ -272,3 +277,19 @@ function initDeleteEvents() {
     });
   });
 }
+
+function initImageGallery() {
+  const mainImage = document.querySelector('#main-image');
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  if (mainImage && thumbnails.length > 0) {
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', () => {
+        mainImage.src = thumbnail.src;
+      });
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initImageGallery();
+});

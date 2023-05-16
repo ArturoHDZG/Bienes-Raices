@@ -1,14 +1,22 @@
 <?php
+
+// Functions
 require_once 'includes/functions.php';
 
-includeTemplate('head');
+// View Template
 includeTemplate('header');
+
 ?>
 
-<main class="container section">
-  <h1>Titulo Pagina</h1>
-</main>
+    <main class="container section">
+
+      <h1>Titulo Pagina</h1>
+
+    </main>
 
 <?php
-  includeTemplate('footer');
+
+// View Template
+includeTemplate('footer');
+
 ?>
