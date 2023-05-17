@@ -12,9 +12,13 @@
   justify-content: space-between;
   margin-bottom: 2rem;
 
+  img { max-height: 22.5rem; }
+
   @include tablet { margin-bottom: 0; }
 
   .card-content { padding: 2rem; }
+
+  h3 { text-transform: capitalize; }
 
   h3, p { margin: 0%; }
 }

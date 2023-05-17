@@ -23,8 +23,13 @@ function darkMode() {
 
   // Set dark mode based on user preference
   function setDarkMode() {
-    const darkModeOn = localStorage.getItem('color-mode') === 'true' || preferDarkMode.matches;
-    htmlEl.classList.toggle('dark-mode', darkModeOn);
+    const colorMode = localStorage.getItem('color-mode');
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (colorMode === 'true' || (!colorMode && prefersDarkMode)) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
   }
 
   // Save manual preferences
@@ -274,6 +279,18 @@ function initImageGallery() {
   }
 }
 
+//* Cards h3 Text Transform to Capitalize
+function transformText() {
+  const elements = document.querySelectorAll('.card h3');
+
+  elements.forEach(element => {
+    const text = element.textContent;
+    if (text === text.toUpperCase()) {
+      element.textContent = text.toLowerCase();
+    }
+  });
+}
+
 //* DOMContentLoaded controller
 document.addEventListener('DOMContentLoaded', function () {
   responsiveMenu();
@@ -285,4 +302,5 @@ document.addEventListener('DOMContentLoaded', function () {
   initImageUpload();
   initDeleteEvents();
   initImageGallery();
+  transformText();
 });
