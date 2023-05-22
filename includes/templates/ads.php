@@ -1,27 +1,27 @@
 <?php
 
+// Imports
+require_once 'includes/app.php';
+
 // DB connection
-require_once __DIR__ . '/../config/database.php';
 $db = connectionBD();
 
 // Check if limit is set
 if (isset($limit) && is_numeric($limit)) {
 
   $query = "(SELECT realestates.*, province.province as province_name, canton.canton as canton_name, 'realestates' as source FROM realestates JOIN province ON realestates.province = province.id JOIN canton ON realestates.canton = canton.id ORDER BY date DESC LIMIT $limit) UNION ALL (SELECT rentals.*, province.province as province_name, canton.canton as canton_name, 'rentals' as source FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC LIMIT $limit)";
-
 } else {
 
   $query = "(SELECT realestates.*, province.province as province_name, canton.canton as canton_name, 'realestates' as source FROM realestates JOIN province ON realestates.province = province.id JOIN canton ON realestates.canton = canton.id ORDER BY date DESC) UNION ALL (SELECT rentals.*, province.province as province_name, canton.canton as canton_name, 'rentals' as source FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC)";
-
 }
 
 // DB results
-$result = mysqli_query($db, $query);
+$result = $db->query($query);
 
 ?>
 
 <div class="cards-container">
-  <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+  <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)) : ?>
 
     <?php $images = explode(',', $row['images']); ?>
 
@@ -76,6 +76,6 @@ $result = mysqli_query($db, $query);
 <?php
 
 // Close DB connection
-mysqli_close($db);
+$db = null;
 
 ?>

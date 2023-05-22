@@ -6,12 +6,7 @@ ob_start();
 require_once '../../includes/functions.php';
 
 // URL protection
-$auth = loginOn();
-
-if (!$auth) {
-
-  header("Location:/");
-}
+login();
 
 // Get property ID and Table_name
 $id = $_GET['id'];

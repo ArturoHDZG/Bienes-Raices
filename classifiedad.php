@@ -2,11 +2,10 @@
 // Header Function Cache
 ob_start();
 
-// Functions
-require_once 'includes/functions.php';
+// Imports
+require_once 'includes/app.php';
 
 // DB connection
-require_once 'includes/config/database.php';
 $db = connectionBD();
 
 // Global Variables

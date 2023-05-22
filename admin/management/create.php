@@ -2,16 +2,17 @@
 // Header Function Cache
 ob_start();
 
-// Functions
-require_once '../../includes/functions.php';
+// Imports
+require_once '../../includes/app.php';
+
+// Database connection
+$db = connectionBD();
 
 // URL protection
-$auth = loginOn();
+login();
 
-if (!$auth) {
-
-  header("Location:/");
-}
+// Define errors array
+$errors = [];
 
 // Define starting variables
 $title = '';
@@ -27,45 +28,23 @@ $parking = '';
 $type = '';
 $vendors_id = '';
 
-// define other variables
-$optionsProvince = '';
-
-// Define errors array
-$errors = [];
-
-// Database connection
-require_once '../../includes/config/database.php';
-$db = connectionBD();
-
-// Query for vendors_id
-$query = "SELECT * FROM vendors";
-$answer = mysqli_query($db, $query);
-
-// Query for provinces
-$queryProvince = "SELECT * FROM province";
-$answerProvince = mysqli_query($db, $queryProvince);
-
-// Query for cantons
-$queryCanton = "SELECT * FROM canton";
-$answerCanton = mysqli_query($db, $queryCanton);
-
 // Generate options for province select
-while ($rowProvince = mysqli_fetch_assoc($answerProvince)) {
-
-  $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
-}
+// $optionsProvince = '';
+// while ($rowProvince = mysqli_fetch_assoc($answerProvince)) {
+//   $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
+// }
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Filled input fields if user make a mistake and sanitize
-  $title = mysqli_real_escape_string($db, $_POST['title']);
-  $price = mysqli_real_escape_string($db, $_POST['price']);
-  $description = mysqli_real_escape_string($db, $_POST['description']);
-  $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
-  $wc = mysqli_real_escape_string($db, $_POST['wc']);
-  $parking = mysqli_real_escape_string($db, $_POST['parking']);
-  $date = date('Y-m-d');
+  // $title = mysqli_real_escape_string($db, $_POST['title']);
+  // $price = mysqli_real_escape_string($db, $_POST['price']);
+  // $description = mysqli_real_escape_string($db, $_POST['description']);
+  // $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
+  // $wc = mysqli_real_escape_string($db, $_POST['wc']);
+  // $parking = mysqli_real_escape_string($db, $_POST['parking']);
+  // $date = date('Y-m-d');
 
   // Not input field variables
   if (isset($_POST['currency'])) {
@@ -259,14 +238,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Check if file name already exists in DB
             if ($type == 1) {
 
-              $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
-              $result = mysqli_query($db, $query);
-              $count = mysqli_fetch_row($result)[0];
-            } elseif ($type == 2) {
+            //   $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
+            //   $result = mysqli_query($db, $query);
+            //   $count = mysqli_fetch_row($result)[0];
+            // } elseif ($type == 2) {
 
-              $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
-              $result = mysqli_query($db, $query);
-              $count = mysqli_fetch_row($result)[0];
+            //   $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
+            //   $result = mysqli_query($db, $query);
+            //   $count = mysqli_fetch_row($result)[0];
             }
           } while ($count > 0);
 
@@ -300,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert into db
-    $writeDB = mysqli_query($db, $query);
+    // $writeDB = mysqli_query($db, $query);
 
     if ($writeDB) {
 

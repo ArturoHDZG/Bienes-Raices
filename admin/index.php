@@ -2,20 +2,13 @@
 // Header Function Cache
 ob_start();
 
-// Functions
-require_once '../includes/functions.php';
+// Imports
+require_once '../includes/app.php';
 
 // URL protection
-$auth = loginOn();
-
-if (!$auth) {
-
-  header("Location:/");
-
-}
+login();
 
 // Database connection
-require_once '../includes/config/database.php';
 $db = connectionBD();
 
 // Database query
@@ -23,43 +16,33 @@ $type = '';
 $query = '';
 
 if (isset($_GET['type'])) {
-
   $type = ($_GET['type']);
-
 }
 
 if ($type == 1) {
-
   $query = "SELECT * FROM realestates";
-
 } elseif ($type == 2) {
-
   $query = "SELECT * FROM rentals";
-
 }
 
 // Database answer
 if (!empty($query)) {
-
-  $answer = mysqli_query($db, $query);
-
+  $answer = $db->query($query);
 }
+echo '<pre>';
+var_dump($answer);
+echo '</pre>';
+exit;
 
 // Get table name for use in URL
 if (isset($_GET['type'])) {
-
   $type = $_GET['type'];
 
   if ($type == '1') {
-
     $tableName = 'realestates';
-
   } elseif ($type == '2') {
-
     $tableName = 'rentals';
-
   }
-
 }
 
 // Show property creation message
@@ -67,56 +50,42 @@ $message = $_GET['result'] ?? null;
 
 // Delete properties
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
   $id = $_POST['id'];
   $id = filter_var($id, FILTER_VALIDATE_INT);
 
   if ($type == '1' && $id) {
-
     $query = "DELETE FROM realestates WHERE id = {$id}";
     $queryImages = "SELECT images FROM realestates WHERE id = {$id}";
-
   } elseif ($type == '2' && $id) {
-
     $query = "DELETE FROM rentals WHERE id = {$id}";
     $queryImages = "SELECT images FROM rentals WHERE id = {$id}";
-
   }
 
-  $answerImages = mysqli_query($db, $queryImages);
-  $property = mysqli_fetch_assoc($answerImages);
+  $answerImages = $db->query($queryImages);
+  $property = $answerImages->fetch(PDO::FETCH_ASSOC);
   $images = explode(',', $property['images']);
 
   foreach ($images as $image) {
-
     unlink('../images/' . $image);
-
   }
 
-  $answer = mysqli_query($db, $query);
+  $answer = $db->query($query);
 
   if ($answer) {
-
     header("Location:/admin?result=3", true, 303);
-
   }
-
 }
 
 // Assign table for properties
 if ($type == 1) {
-
   $source = 'realestates';
 
 } elseif ($type == 2) {
-
   $source = 'rentals';
-
 }
 
 // View Template
 includeTemplate('header');
-
 ?>
 
     <main class="container section">
@@ -165,9 +134,9 @@ includeTemplate('header');
               <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio.</td>
             </tr>
 
-          <?php elseif (isset($answer) && mysqli_num_rows($answer) > 0) : ?>
+          <?php elseif (isset($answer) && count($answer->fetchAll()) > 0) : ?>
 
-            <?php while ($property = mysqli_fetch_assoc($answer)) : ?>
+            <?php while ($property = $answer->fetch(PDO::FETCH_ASSOC)) : ?>
 
               <tr>
 
@@ -182,10 +151,8 @@ includeTemplate('header');
                   <?php
 
                   if (isset($property['images'])) {
-
                     $images = explode(',', $property['images']);
                     $firstImage = $images[0];
-
                   }
 
                   ?>
@@ -230,7 +197,7 @@ includeTemplate('header');
 <?php
 
 // Close DB connection
-mysqli_close($db);
+$db = null;
 
 // View Template
 includeTemplate('footer');

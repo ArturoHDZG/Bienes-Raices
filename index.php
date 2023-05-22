@@ -1,7 +1,7 @@
 <?php
 
-// Functions
-require_once 'includes/functions.php';
+// Imports
+require_once 'includes/app.php';
 
 // View Template
 includeTemplate('header', $home = true);
@@ -59,7 +59,7 @@ includeTemplate('header', $home = true);
 
       $limit = 3;
       $source = 'realestates';
-      include 'includes/templates/ads.php';
+      include_once 'includes/templates/ads.php';
 
       ?>
 
@@ -69,7 +69,7 @@ includeTemplate('header', $home = true);
 
       $limit = 3;
       $source = 'rentals';
-      include 'includes/templates/ads.php';
+      include_once 'includes/templates/ads.php';
 
       ?>
 

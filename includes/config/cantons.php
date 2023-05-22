@@ -1,19 +1,23 @@
 <?php
+// Imports
+require_once '/../app.php';
 
 // Database connection
-require_once '../../includes/config/database.php';
 $db = connectionBD();
+
 
 // Get the selected province id from the URL
 $selectedProvinceId = $_GET['province_id'];
 
 // Query for cantons
 $queryCanton = "SELECT * FROM canton WHERE province_id = $selectedProvinceId";
-$answerCanton = mysqli_query($db, $queryCanton);
+$statement = $db->prepare($queryCanton);
+$statement->execute();
+$answerCanton = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 // Generate array of cantons
 $cantons = [];
-while ($rowCanton = mysqli_fetch_assoc($answerCanton)) {
+foreach ($answerCanton as $rowCanton) {
   $cantons[] = [
     'id' => $rowCanton['id'],
     'canton' => $rowCanton['canton']

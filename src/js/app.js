@@ -114,7 +114,7 @@ function initCantonSelect() {
   if (provinceSelect) {
     const selectedProvinceId = provinceSelect.value;
 
-    fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+    fetch(`cantons.php?province_id=${selectedProvinceId}`)
       .then(response => response.json())
       .then(data => {
         updateCantonSelect(data, cantonSelect);
@@ -126,7 +126,7 @@ function initCantonSelect() {
     provinceSelect.addEventListener('change', () => {
       const selectedProvinceId = provinceSelect.value;
 
-      fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+      fetch(`cantons.php?province_id=${selectedProvinceId}`)
         .then(response => response.json())
         .then(data => {
           updateCantonSelect(data, cantonSelect);
