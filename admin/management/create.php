@@ -8,7 +8,7 @@ require_once '../../includes/app.php';
 use App\Property;
 
 // Instances
-// $property = new Property($_POST);
+$property = new Property($_POST);
 
 // Database connection
 $db = connectionBD();
@@ -32,17 +32,14 @@ $wc = '';
 $parking = '';
 $type = '';
 $vendorId = '';
-
-// Generate options for province select
 $optionsProvince = '';
 $cantonValue = '';
 
-while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) {
-  $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
-}
-
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  // Insert into DB
+  $property->insert($type);
+
   // Filled input fields if user make a mistake
   $title = $_POST['title'];
   $price = $_POST['price'];
@@ -239,26 +236,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
     }
 
-    // Query into db
-    if ($type == 1) {
-
-      $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
-      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendorId')";
-    } elseif ($type == 2) {
-
-      $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
-      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendorId')";
-    }
-
     // Insert into db
-    $writeDB = $db->prepare($query);
-    $writeDB->execute();
+    // $writeDB = $db->prepare($query);
+    // $writeDB->execute();
 
-    if ($writeDB) {
+    // if ($writeDB) {
 
-      header("Location:/admin?result=1", true, 303);
-      exit;
-    }
+    //   header("Location:/admin?result=1", true, 303);
+    //   exit;
+    // }
   }
 }
 
@@ -311,8 +297,10 @@ includeTemplate('header');
         <div class="location-province">
           <label for="province">Provincia:</label>
           <select name="province" id="province">
-            <option value="0" disabled selected>-- Seleccionar --</option>
-            <?php echo $optionsProvince; ?>
+            <option value="0" disabled>-- Seleccionar --</option>
+            <?php while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) : ?>
+              <option value="<?= $rowProvince['id'] ?>" <?= (isset($province) && $province == $rowProvince['id']) ? 'selected' : '' ?>><?= $rowProvince['province'] ?></option>
+            <?php endwhile; ?>
           </select>
         </div>
 
@@ -366,7 +354,7 @@ includeTemplate('header');
       <select name="vendorId">
         <option value="0" disabled selected>-- Seleccionar --</option>
         <?php while ($row = $answerVendors->fetch(PDO::FETCH_ASSOC)) : ?>
-          <option <?php echo $vendorId === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>">
+          <option value="<?php echo $row['id']; ?>" <?php echo ($vendorId == $row['id']) ? 'selected' : ''; ?>>
             <?php echo $row['id'] . " - " . $row['name'] . " " . $row['lastname']; ?>
           </option>
         <?php endwhile; ?>
@@ -381,6 +369,14 @@ includeTemplate('header');
   </form>
 
 </main>
+
+<script>
+  // Gets canton value if user make a mistake
+  document.addEventListener('DOMContentLoaded', function() {
+    const selectedCanton = <?= isset($canton) ? $canton : 'null' ?>;
+    initCantonSelect(selectedCanton);
+  });
+</script>
 
 <?php
 
