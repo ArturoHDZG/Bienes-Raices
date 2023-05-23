@@ -8,7 +8,7 @@ require_once '../../includes/app.php';
 use App\Property;
 
 // Instances
-$property = new Property($_POST);
+// $property = new Property($_POST);
 
 // Database connection
 $db = connectionBD();
@@ -35,6 +35,7 @@ $vendorId = '';
 
 // Generate options for province select
 $optionsProvince = '';
+$cantonValue = '';
 
 while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) {
   $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
@@ -42,14 +43,14 @@ while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) {
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Filled input fields if user make a mistake and sanitize
-  // $title = mysqli_real_escape_string($db, $_POST['title']);
-  // $price = mysqli_real_escape_string($db, $_POST['price']);
-  // $description = mysqli_real_escape_string($db, $_POST['description']);
-  // $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
-  // $wc = mysqli_real_escape_string($db, $_POST['wc']);
-  // $parking = mysqli_real_escape_string($db, $_POST['parking']);
-  // $date = date('Y-m-d');
+  // Filled input fields if user make a mistake
+  $title = $_POST['title'];
+  $price = $_POST['price'];
+  $description = $_POST['description'];
+  $rooms = $_POST['rooms'];
+  $wc = $_POST['wc'];
+  $parking = $_POST['parking'];
+  $date = date('Y-m-d');
 
   // Not input field variables
   if (isset($_POST['currency'])) {
@@ -278,14 +279,14 @@ includeTemplate('header');
     </div>
   <?php endforeach; ?>
 
-  <form class="form" method="POST" action="/admin/management/create.php" enctype="multipart/form-data">
+  <form class="form" method="POST" enctype="multipart/form-data">
 
     <fieldset>
 
       <legend>Información de la Propiedad</legend>
 
       <label for="title">Título del Anuncio:</label>
-      <input id="title" name="title" type="text" placeholder="Título del Anuncio" value="<?php echo $title; ?>" required>
+      <input id="title" name="title" type="text" placeholder="Título del Anuncio" value="<?php echo $title; ?>">
 
       <div class="currency-price">
 
@@ -300,7 +301,7 @@ includeTemplate('header');
 
         <div class="price-section">
           <label for="price">Precio:</label>
-          <input id="price" name="price" type="text" value="<?php echo $price; ?>" required>
+          <input id="price" name="price" type="text" value="<?php echo $price; ?>">
         </div>
 
       </div>
@@ -340,13 +341,13 @@ includeTemplate('header');
       <legend>Características de la Propiedad</legend>
 
       <label for="rooms">Habitaciones:</label>
-      <input id="rooms" name="rooms" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $rooms; ?>" required>
+      <input id="rooms" name="rooms" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $rooms; ?>">
 
       <label for="wc">Baños:</label>
-      <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>" required>
+      <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>">
 
       <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>" required>
+      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>">
 
     </fieldset>
 
