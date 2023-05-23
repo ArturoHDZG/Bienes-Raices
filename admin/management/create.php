@@ -5,6 +5,11 @@ ob_start();
 // Imports
 require_once '../../includes/app.php';
 
+use App\Property;
+
+// Instances
+$property = new Property($_POST);
+
 // Database connection
 $db = connectionBD();
 
@@ -26,17 +31,17 @@ $rooms = '';
 $wc = '';
 $parking = '';
 $type = '';
-$vendors_id = '';
+$vendorId = '';
 
 // Generate options for province select
-// $optionsProvince = '';
-// while ($rowProvince = mysqli_fetch_assoc($answerProvince)) {
-//   $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
-// }
+$optionsProvince = '';
+
+while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) {
+  $optionsProvince .= "<option value=\"{$rowProvince['id']}\">{$rowProvince['province']}</option>";
+}
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
   // Filled input fields if user make a mistake and sanitize
   // $title = mysqli_real_escape_string($db, $_POST['title']);
   // $price = mysqli_real_escape_string($db, $_POST['price']);
@@ -48,33 +53,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Not input field variables
   if (isset($_POST['currency'])) {
-
     $currency = $_POST['currency'];
   }
 
   if (isset($_FILES['images'])) {
-
     $images = $_FILES['images'];
   }
 
   if (isset($_POST['province'])) {
-
     $province = $_POST['province'];
   }
 
   if (isset($_POST['canton'])) {
-
     $canton = $_POST['canton'];
   }
 
   if (isset($_POST['type'])) {
-
     $type = $_POST['type'];
   }
 
-  if (isset($_POST['vendors_id'])) {
-
-    $vendors_id = $_POST['vendors_id'];
+  if (isset($_POST['vendorId'])) {
+    $vendorId = $_POST['vendorId'];
   }
 
   // Format currency input field
@@ -82,57 +81,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Error messages
   if (!$title) {
-
     $errors[] = 'El titulo del anuncio es obligatorio';
   }
 
   if (!$currency) {
-
     $errors[] = 'El tipo de moneda es obligatorio';
   }
 
   if (!$price) {
-
     $errors[] = 'El precio del anuncio es obligatorio';
   }
 
   if (!$province) {
-
     $errors[] = 'Selecciona una provincia';
   }
 
   if (!$canton) {
-
     $errors[] = 'Selecciona un cantón';
   }
 
   if (strlen($description) < 50) {
-
     $errors[] = 'La descripción del anuncio es obligatorio y debe contener al menos 50 caracteres';
   }
 
   if (!$rooms) {
-
     $errors[] = 'El número de habitaciones es obligatorio';
   }
 
   if (!$wc) {
-
     $errors[] = 'El número de baños es obligatorio';
   }
 
   if (!$parking) {
-
     $errors[] = 'El número de lugares de estacionamiento es obligatorio';
   }
 
   if (!$type) {
-
     $errors[] = 'Debes seleccionar un tipo de anuncio';
   }
 
-  if (!$vendors_id) {
-
+  if (!$vendorId) {
     $errors[] = 'Debes seleccionar un vendedor';
   }
 
@@ -152,7 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   if ($noImages) {
-
     $errors[] = 'Debes agregar al menos una imagen';
   }
 
@@ -163,45 +150,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $maxImages = 10;
 
   if (isset($images['name']) && is_array($images['name'])) {
-
     $numImages = min(count($images['name']), $maxImages);
   } else {
-
     $numImages = 0;
   }
 
   // Define images variable
   if (isset($_FILES['images']) && is_array($_FILES['images'])) {
-
     $images = $_FILES['images'];
   } else {
-
     var_dump($_FILES['images']);
     exit;
   }
 
   // Check if image variables are defined
   if (!isset($imageError)) {
-
     $imageError = 0;
   }
 
   if (!isset($imageName)) {
-
     $imageName = '';
   }
 
   if (!isset($imageSize)) {
-
     $imageSize = 0;
   }
 
   // Valid form
   if (empty($errors)) {
-
     // Iterate over each uploaded image
     for ($i = 0; $i < $numImages; $i++) {
-
       // Access individual image properties
       $imageName = $images['name'][$i];
       $imageSize = $images['size'][$i];
@@ -210,42 +188,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       // Check for upload errors
       if ($imageError !== 0) {
-
         $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
       } else {
-
         $maxSize = 1000 * 1000;
 
         // Validate image size
         if ($imageSize > $maxSize) {
-
           $errors[] = 'La imagen ' . $imageName . ' debe tener un tamaño máximo de 1MB';
         } else {
-
           // Create images folder
           $folderImages = '../../images/';
 
           if (!is_dir($folderImages)) {
-
             mkdir($folderImages);
           }
 
           // Generate unique filename
           do {
-
             $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
 
             // Check if file name already exists in DB
             if ($type == 1) {
-
-            //   $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
-            //   $result = mysqli_query($db, $query);
-            //   $count = mysqli_fetch_row($result)[0];
-            // } elseif ($type == 2) {
-
-            //   $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
-            //   $result = mysqli_query($db, $query);
-            //   $count = mysqli_fetch_row($result)[0];
+              $stmt = $db->prepare("SELECT COUNT(*) FROM realestates WHERE images = :nameImage");
+              $stmt->bindParam(':nameImage', $nameImage);
+              $stmt->execute();
+              $count = $stmt->fetchColumn();
+            } elseif ($type == 2) {
+              $stmt = $db->prepare("SELECT COUNT(*) FROM rentals WHERE images = :nameImage");
+              $stmt->bindParam(':nameImage', $nameImage);
+              $stmt->execute();
+              $count = $stmt->fetchColumn();
             }
           } while ($count > 0);
 
@@ -263,23 +235,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate total size of image names string
     if (strlen($imageNamesStr) > 500) {
-
       $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
     }
 
     // Query into db
     if ($type == 1) {
 
-      $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
+      $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
+      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendorId')";
     } elseif ($type == 2) {
 
-      $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
+      $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
+      VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendorId')";
     }
 
     // Insert into db
-    // $writeDB = mysqli_query($db, $query);
+    $writeDB = $db->prepare($query);
+    $writeDB->execute();
 
     if ($writeDB) {
 
@@ -390,15 +362,13 @@ includeTemplate('header');
       </select>
 
       <label>Vendedor:</label>
-      <select name="vendors_id">
+      <select name="vendorId">
         <option value="0" disabled selected>-- Seleccionar --</option>
-
-        <?php while ($row = mysqli_fetch_assoc($answer)) : ?>
-          <option <?php echo $vendors_id === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>">
+        <?php while ($row = $answerVendors->fetch(PDO::FETCH_ASSOC)) : ?>
+          <option <?php echo $vendorId === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>">
             <?php echo $row['id'] . " - " . $row['name'] . " " . $row['lastname']; ?>
           </option>
         <?php endwhile; ?>
-
       </select>
 
     </fieldset>

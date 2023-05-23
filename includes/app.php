@@ -19,13 +19,9 @@ $db = connectionBD();
 
 //* Queries */
 // Query for vendors (create.php, modify.php)
-$query = "SELECT * FROM vendors";
-$answerVendors = $db->query($query);
+$queryVendors = "SELECT * FROM vendors";
+$answerVendors = $db->query($queryVendors);
 
 // Query for provinces (create.php, modify.php)
 $queryProvince = "SELECT * FROM province";
 $answerProvince = $db->query($queryProvince);
-
-// Query for cantons (get_cantons)
-$queryCanton = "SELECT * FROM canton";
-$answerCanton = $db->query($queryCanton);

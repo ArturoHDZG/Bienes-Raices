@@ -1,10 +1,6 @@
 <?php
 // Imports
-require_once '/../app.php';
-
-// Database connection
-$db = connectionBD();
-
+require_once '../app.php';
 
 // Get the selected province id from the URL
 $selectedProvinceId = $_GET['province_id'];
@@ -17,6 +13,7 @@ $answerCanton = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 // Generate array of cantons
 $cantons = [];
+
 foreach ($answerCanton as $rowCanton) {
   $cantons[] = [
     'id' => $rowCanton['id'],

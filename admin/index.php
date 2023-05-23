@@ -29,10 +29,6 @@ if ($type == 1) {
 if (!empty($query)) {
   $answer = $db->query($query);
 }
-echo '<pre>';
-var_dump($answer);
-echo '</pre>';
-exit;
 
 // Get table name for use in URL
 if (isset($_GET['type'])) {
@@ -79,120 +75,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Assign table for properties
 if ($type == 1) {
   $source = 'realestates';
-
 } elseif ($type == 2) {
   $source = 'rentals';
 }
 
 // View Template
 includeTemplate('header');
+
 ?>
 
-    <main class="container section">
+<main class="container section">
 
-      <h1>Administrador de Anuncios</h1>
+  <h1>Administrador de Anuncios</h1>
 
-      <?php if (intval($message) === 1) : ?>
-        <p class="alert success">¡Anuncio creado correctamente!</p>
-      <?php elseif (intval($message) === 2) : ?>
-        <p class="alert success">¡Anuncio actualizado correctamente!</p>
-      <?php elseif (intval($message) === 3) : ?>
-        <p class="alert success">¡Anuncio eliminado correctamente!</p>
-      <?php endif; ?>
+  <?php if (intval($message) === 1) : ?>
+    <p class="alert success">¡Anuncio creado correctamente!</p>
+  <?php elseif (intval($message) === 2) : ?>
+    <p class="alert success">¡Anuncio actualizado correctamente!</p>
+  <?php elseif (intval($message) === 3) : ?>
+    <p class="alert success">¡Anuncio eliminado correctamente!</p>
+  <?php endif; ?>
 
-      <div class="admin-topBtn">
-        <a href="/admin/management/create.php" class="btn-greenInline">Nuevo Anuncio</a>
-      </div>
+  <div class="admin-topBtn">
+    <a href="/admin/management/create.php" class="btn-greenInline">Nuevo Anuncio</a>
+  </div>
 
-      <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="GET">
+  <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="GET">
 
-        <label>Tipo de anuncio:</label>
-        <select class="type-admin" name="type">
-          <option value="0" disabled selected>-- Seleccionar --</option>
-          <option value="1">Venta</option>
-          <option value="2">Alquiler</option>
-        </select>
+    <label>Tipo de anuncio:</label>
+    <select class="type-admin" name="type">
+      <option value="0" disabled selected>-- Seleccionar --</option>
+      <option value="1">Venta</option>
+      <option value="2">Alquiler</option>
+    </select>
 
-      </form>
+  </form>
 
-      <table aria-label="Listado de Propiedades" class="table-list">
+  <table aria-label="Listado de Propiedades" class="table-list">
 
-        <thead>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Titulo</th>
+        <th>Imagen</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <?php if (empty($type)) : ?>
+        <tr>
+          <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio.</td>
+        </tr>
+
+      <?php elseif (isset($answer) && $answer->rowCount() > 0) : ?>
+
+        <?php while ($property = $answer->fetch(PDO::FETCH_ASSOC)) : ?>
           <tr>
-            <th>Fecha</th>
-            <th>Titulo</th>
-            <th>Imagen</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
 
-        <tbody>
+            <td><?php echo $property['date']; ?></td>
 
-          <?php if (empty($type)) : ?>
-            <tr>
-              <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio.</td>
-            </tr>
+            <td>
+              <a href="../classifiedad.php?id=<?php echo $property['id'] ?>&source=<?php echo $source ?>" target="_blank" rel="noopener noreferrer"><?php echo $property['title']; ?></a>
+            </td>
 
-          <?php elseif (isset($answer) && count($answer->fetchAll()) > 0) : ?>
+            <td>
 
-            <?php while ($property = $answer->fetch(PDO::FETCH_ASSOC)) : ?>
+              <?php
 
-              <tr>
+              if (isset($property['images'])) {
+                $images = explode(',', $property['images']);
+                $firstImage = $images[0];
+              }
 
-                <td><?php echo $property['date']; ?></td>
+              ?>
 
-                <td>
-                  <a href="../classifiedad.php?id=<?php echo $property['id'] ?>&source=<?php echo $source ?>" target="_blank" rel="noopener noreferrer"><?php echo $property['title']; ?></a>
-                </td>
+              <img src="/images/<?php echo $firstImage; ?>" alt="Imagen Principal Propiedad" class="table-image">
+            </td>
 
-                <td>
+            <td><?php echo $property['currency'] . number_format($property['price'], 2) ?></td>
 
-                  <?php
+            <td>
 
-                  if (isset($property['images'])) {
-                    $images = explode(',', $property['images']);
-                    $firstImage = $images[0];
-                  }
+              <form class="form" method="POST">
 
-                  ?>
+                <input type="hidden" name="id" value="<?php echo $property['id']; ?>">
+                <input type="submit" class="btn-redBlock" value="Eliminar">
 
-                  <img src="/images/<?php echo $firstImage; ?>" alt="Imagen Principal Propiedad" class="table-image">
-                </td>
+              </form>
 
-                <td><?php echo $property['currency'] . number_format($property['price'], 2) ?></td>
-
-                <td>
-
-                  <form class="form" method="POST">
-
-                    <input type="hidden" name="id" value="<?php echo $property['id']; ?>">
-                    <input type="submit" class="btn-redBlock" value="Eliminar">
-
-                  </form>
-
-                  <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property['id']; ?>
+              <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property['id']; ?>
                       &table_name=<?php echo $tableName; ?>">Modificar</a>
 
-                </td>
+            </td>
 
-              </tr>
+          </tr>
 
-            <?php endwhile; ?>
+        <?php endwhile; ?>
 
-          <?php else : ?>
+      <?php else : ?>
 
-            <tr>
-              <td class="alert error" colspan="6">No hay registros en este tipo de anuncio.</td>
-            </tr>
+        <tr>
+          <td class="alert error" colspan="6">No hay registros en este tipo de anuncio.</td>
+        </tr>
 
-          <?php endif; ?>
+      <?php endif; ?>
 
-        </tbody>
+    </tbody>
 
-      </table>
+  </table>
 
-    </main>
+</main>
 
 <?php
 
