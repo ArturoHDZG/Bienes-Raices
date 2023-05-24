@@ -107,7 +107,7 @@ function adminIndexSelectTypeQuery() {
 }
 
 //* Update cantons list from management
-function initCantonSelect(selectedCanton) {
+function initCantonSelect() {
   const provinceSelect = document.querySelector('#province');
   const cantonSelect = document.querySelector('#canton');
 
@@ -118,9 +118,13 @@ function initCantonSelect(selectedCanton) {
       .then(response => response.json())
       .then(data => {
         updateCantonSelect(data, cantonSelect);
-        if (selectedCanton) {
-          cantonSelect.value = selectedCanton;
+        updateCantonSelect(data, cantonSelect);
+        if (cantonValue && cantonSelect.querySelector(`option[value="${cantonValue}"]`)) {
+          cantonSelect.value = cantonValue;
         }
+      })
+      .catch (error => {
+      console.error(error);
       });
 
     provinceSelect.addEventListener('change', () => {
@@ -130,6 +134,9 @@ function initCantonSelect(selectedCanton) {
         .then(response => response.json())
         .then(data => {
           updateCantonSelect(data, cantonSelect);
+        })
+        .catch(error => {
+          console.error(error);
         });
     });
   }
@@ -150,6 +157,9 @@ function updateCantonSelect(data, cantonSelect) {
     const option = document.createElement('option');
     option.value = canton.id;
     option.textContent = canton.canton;
+    if (cantonValue && canton.id === cantonValue) {
+      option.selected = true;
+    }
     cantonSelect.appendChild(option);
   });
 }
@@ -298,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
   formatCurrencyInput();
   descriptionCounter();
   adminIndexSelectTypeQuery();
-  initCantonSelect(selectedCanton);
+  initCantonSelect();
   initImageUpload();
   initDeleteEvents();
   initImageGallery();

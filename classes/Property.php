@@ -5,6 +5,9 @@ namespace App;
 
 class Property
 {
+  // Database data
+  protected static $db;
+
   // Property attributes
   public $id;
   public $title;
@@ -19,6 +22,11 @@ class Property
   public $parking;
   public $date;
   public $vendorId;
+
+  public static function setDB($database)
+  {
+    self::$db = $database;
+  }
 
   // Constructor
   public function __construct($args = [])
@@ -40,14 +48,40 @@ class Property
 
   public function insert($type)
   {
+    // Get property values
+    $attributes = $this->attributes();
+
+    // Build column and value lists
+    $columns = implode(', ', array_map(function ($key) { return ltrim($key, ':'); }, array_keys($attributes)));
+    $values = implode(', ', array_keys($attributes));
+
     // Query into db
     if ($type == 1) {
-      $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
-      VALUES ('$this->title', '$this->currency', '$this->price', '$this->province', '$this->canton', '$this->images', '$this->description', '$this->rooms', '$this->wc', '$this->parking', '$this->date', '$this->vendorId')";
-      exit;
+      $query = "INSERT INTO realestates ($columns) VALUES ($values)";
     } elseif ($type == 2) {
-      $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendorId)
-      VALUES ('$this->title', '$this->currency', '$this->price', '$this->province', '$this->canton', '$this->images', '$this->description', '$this->rooms', '$this->wc', '$this->parking', '$this->date', '$this->vendorId')";
+      $query = "INSERT INTO rentals ($columns) VALUES ($values)";
     }
+
+    $stmt = self::$db->prepare($query);
+    $stmt->execute($attributes);
+  }
+
+  // Convert values to an associative array
+  public function attributes()
+  {
+    return [
+      ':title' => $this->title,
+      ':currency' => $this->currency,
+      ':price' => $this->price,
+      ':province' => $this->province,
+      ':canton' => $this->canton,
+      ':images' => $this->images,
+      ':description' => $this->description,
+      ':rooms' => $this->rooms,
+      ':wc' => $this->wc,
+      ':parking' => $this->parking,
+      ':date' => $this->date,
+      ':vendorId' => $this->vendorId
+    ];
   }
 }

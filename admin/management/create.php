@@ -37,9 +37,6 @@ $cantonValue = '';
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Insert into DB
-  $property->insert($type);
-
   // Filled input fields if user make a mistake
   $title = $_POST['title'];
   $price = $_POST['price'];
@@ -236,6 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
     }
 
+    // Insert into DB
+    $property->insert($type);
+
     // Insert into db
     // $writeDB = $db->prepare($query);
     // $writeDB->execute();
@@ -371,11 +371,7 @@ includeTemplate('header');
 </main>
 
 <script>
-  // Gets canton value if user make a mistake
-  document.addEventListener('DOMContentLoaded', function() {
-    const selectedCanton = <?= isset($canton) ? $canton : 'null' ?>;
-    initCantonSelect(selectedCanton);
-  });
+  const cantonValue = <?php echo json_encode($canton); ?>;
 </script>
 
 <?php

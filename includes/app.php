@@ -16,6 +16,7 @@ use App\Property;
 
 // DB Functions
 $db = connectionBD();
+Property::setDB($db);
 
 //* Queries */
 // Query for vendors (create.php, modify.php)

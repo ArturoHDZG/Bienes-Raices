@@ -10,7 +10,7 @@ define('FOLDER_IMAGES', __DIR__ . '/../images/');
 // View templates
 function includeTemplate(string $name, bool $home = false)
 {
-  include_once TEMPLATES_URL . "/{$name}.php";
+  require_once TEMPLATES_URL . "/{$name}.php";
 }
 
 // Login session

@@ -7,7 +7,7 @@ class DatabaseConnectionException extends Exception
 }
 
 // DB connection
-function connectionBD(): \PDO
+function connectionBD(): PDO
 {
   $dsn = 'mysql:host=localhost;dbname=tico_casas_db';
   $username = 'root';
@@ -23,7 +23,7 @@ function connectionBD(): \PDO
   return $db;
 }
 
-function checkConnection(\PDO $db): void
+function checkConnection(PDO $db): void
 {
   try {
     $db->query('SELECT 1');
