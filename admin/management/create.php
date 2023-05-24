@@ -1,14 +1,16 @@
 <?php
-// Header Function Cache
+// Header function cache
 ob_start();
 
 // Imports
 require_once '../../includes/app.php';
 
 use App\Property;
+use App\Validator;
 
 // Instances
 $property = new Property($_POST);
+$validator = new Validator();
 
 // Database connection
 $db = connectionBD();
@@ -16,7 +18,7 @@ $db = connectionBD();
 // URL protection
 login();
 
-// Define errors array
+// Define starting errors array
 $errors = [];
 
 // Define starting variables
@@ -37,6 +39,10 @@ $cantonValue = '';
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+  // Format currency input field
+  $price = str_replace(',', '', $price);
+
   // Filled input fields if user make a mistake
   $title = $_POST['title'];
   $price = $_POST['price'];
@@ -46,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $parking = $_POST['parking'];
   $date = date('Y-m-d');
 
-  // Not input field variables
+  // Filled not input field variables
   if (isset($_POST['currency'])) {
     $currency = $_POST['currency'];
   }
@@ -71,63 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $vendorId = $_POST['vendorId'];
   }
 
-  // Format currency input field
-  $price = str_replace(',', '', $price);
-
   // Error messages
-  if (!$title) {
-    $errors[] = 'El titulo del anuncio es obligatorio';
-  }
+  $validator->validateAll($_POST);
+  $errors = $validator->getErrors();
 
-  if (!$currency) {
-    $errors[] = 'El tipo de moneda es obligatorio';
-  }
 
-  if (!$price) {
-    $errors[] = 'El precio del anuncio es obligatorio';
-  }
-
-  if (!$province) {
-    $errors[] = 'Selecciona una provincia';
-  }
-
-  if (!$canton) {
-    $errors[] = 'Selecciona un cantón';
-  }
-
-  if (strlen($description) < 50) {
-    $errors[] = 'La descripción del anuncio es obligatorio y debe contener al menos 50 caracteres';
-  }
-
-  if (!$rooms) {
-    $errors[] = 'El número de habitaciones es obligatorio';
-  }
-
-  if (!$wc) {
-    $errors[] = 'El número de baños es obligatorio';
-  }
-
-  if (!$parking) {
-    $errors[] = 'El número de lugares de estacionamiento es obligatorio';
-  }
-
-  if (!$type) {
-    $errors[] = 'Debes seleccionar un tipo de anuncio';
-  }
-
-  if (!$vendorId) {
-    $errors[] = 'Debes seleccionar un vendedor';
-  }
-
-  // Image error message
   $noImages = true;
-
   if (isset($images['name']) && is_array($images['name'])) {
-
     foreach ($images['name'] as $imageName) {
-
       if ($imageName) {
-
         $noImages = false;
         break;
       }
@@ -233,18 +191,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
     }
 
-    // Insert into DB
-    $property->insert($type);
+    // Insert into DB and result of insertion
+    $writeDB = $property->insert($type);
 
-    // Insert into db
-    // $writeDB = $db->prepare($query);
-    // $writeDB->execute();
-
-    // if ($writeDB) {
-
-    //   header("Location:/admin?result=1", true, 303);
-    //   exit;
-    // }
+    if ($writeDB) {
+      header("Location:/admin?result=1", true, 303);
+      exit;
+    }
   }
 }
 
@@ -297,9 +250,9 @@ includeTemplate('header');
         <div class="location-province">
           <label for="province">Provincia:</label>
           <select name="province" id="province">
-            <option value="0" disabled>-- Seleccionar --</option>
+            <option value="0" disabled selected>-- Seleccionar --</option>
             <?php while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) : ?>
-              <option value="<?= $rowProvince['id'] ?>" <?= (isset($province) && $province == $rowProvince['id']) ? 'selected' : '' ?>><?= $rowProvince['province'] ?></option>
+              <option value="<?= $rowProvince['id'] ?>" <?= (!isset($province) && $rowProvince['id'] == 0) || (isset($province) && $province == $rowProvince['id']) ? 'selected' : '' ?>><?= $rowProvince['province'] ?></option>
             <?php endwhile; ?>
           </select>
         </div>

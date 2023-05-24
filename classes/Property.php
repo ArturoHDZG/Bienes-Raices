@@ -63,7 +63,7 @@ class Property
     }
 
     $stmt = self::$db->prepare($query);
-    $stmt->execute($attributes);
+    return $stmt->execute($attributes);
   }
 
   // Convert values to an associative array
