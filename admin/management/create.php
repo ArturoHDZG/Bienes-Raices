@@ -75,17 +75,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $vendorId = $_POST['vendorId'];
   }
 
-  // Create unique name for each image
-  $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
+  // Set an array to save all image instances
+  $imageInstances = [];
 
-  // Resize and set images names to DB
-  if ($_FILES['images']['tmp_name']) {
-    $images = ImageManager::make($_FILES['images']['tmp_name'])->fit(800, 600);
-    $property->setImages($imageNamesStr);
+  // Resize and set images names to DB and Server
+  if (!empty($images['tmp_name'][0])) {
+    $imageInstances = [];
+
+    foreach ($images['tmp_name'] as $key => $image) {
+      $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
+
+      $img = ImageManager::make($image);
+
+      $img->fit(800, 600);
+
+      $imageInstances[] = ['instance' => $img, 'name' => $nameImage];
+
+      $imageNames[] = $nameImage;
+    }
   }
 
   // Error messages
-  $validation->validateAll($_POST);
+  $validation->validateAll($_POST, $_FILES);
   $errors = $validation->getErrors();
 
   // Valid form
@@ -96,8 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       mkdir(FOLDER_IMAGES);
     }
 
+    // Set image names into DB
+    $imageNamesStr = implode(',', $imageNames);
+    $property->setImages($imageNamesStr);
+
     // Save images into server
-    $imageS->save(FOLDER_IMAGES . $nameImage);
+    foreach ($imageInstances as $imageInstance) {
+      $imageInstance['instance']->save(FOLDER_IMAGES . $imageInstance['name']);
+    }
 
     // Insert into DB and result of insertion
     $writeDB = $property->insert($type);

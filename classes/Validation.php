@@ -100,14 +100,14 @@ class Validation
     }
   }
 
-  public function validateAll($data)
+  public function validateAll($data, $files)
   {
     $this->validateTitle($data['title'] ?? null);
     $this->validateCurrency($data['currency'] ?? null);
     $this->validatePrice($data['price'] ?? null);
     $this->validateProvince($data['province'] ?? null);
     $this->validateCanton($data['canton'] ?? null);
-    $this->validateImages($data['images'] ?? null);
+    $this->validateImages($files['images'] ?? null);
     $this->validateDescription($data['description'] ?? null);
     $this->validateRooms($data['rooms'] ?? null);
     $this->validateWc($data['wc'] ?? null);
