@@ -6,11 +6,12 @@ ob_start();
 require_once '../../includes/app.php';
 
 use App\Property;
-use App\Validator;
+use App\Validation;
+use Intervention\Image\ImageManagerStatic as ImageManager;
 
 // Instances
 $property = new Property($_POST);
-$validator = new Validator();
+$validation = new Validation();
 
 // Database connection
 $db = connectionBD();
@@ -40,12 +41,9 @@ $cantonValue = '';
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  // Format currency input field
-  $price = str_replace(',', '', $price);
-
   // Filled input fields if user make a mistake
   $title = $_POST['title'];
-  $price = $_POST['price'];
+  $price = formatPrice($_POST['price']);
   $description = $_POST['description'];
   $rooms = $_POST['rooms'];
   $wc = $_POST['wc'];
@@ -77,119 +75,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $vendorId = $_POST['vendorId'];
   }
 
+  // Create unique name for each image
+  $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
+
+  // Resize and set images names to DB
+  if ($_FILES['images']['tmp_name']) {
+    $images = ImageManager::make($_FILES['images']['tmp_name'])->fit(800, 600);
+    $property->setImages($imageNamesStr);
+  }
+
   // Error messages
-  $validator->validateAll($_POST);
-  $errors = $validator->getErrors();
-
-
-  $noImages = true;
-  if (isset($images['name']) && is_array($images['name'])) {
-    foreach ($images['name'] as $imageName) {
-      if ($imageName) {
-        $noImages = false;
-        break;
-      }
-    }
-  }
-
-  if ($noImages) {
-    $errors[] = 'Debes agregar al menos una imagen';
-  }
-
-  // Array to store image names
-  $imageNames = [];
-
-  // Limit number of uploaded images to 10
-  $maxImages = 10;
-
-  if (isset($images['name']) && is_array($images['name'])) {
-    $numImages = min(count($images['name']), $maxImages);
-  } else {
-    $numImages = 0;
-  }
-
-  // Define images variable
-  if (isset($_FILES['images']) && is_array($_FILES['images'])) {
-    $images = $_FILES['images'];
-  } else {
-    var_dump($_FILES['images']);
-    exit;
-  }
-
-  // Check if image variables are defined
-  if (!isset($imageError)) {
-    $imageError = 0;
-  }
-
-  if (!isset($imageName)) {
-    $imageName = '';
-  }
-
-  if (!isset($imageSize)) {
-    $imageSize = 0;
-  }
+  $validation->validateAll($_POST);
+  $errors = $validation->getErrors();
 
   // Valid form
   if (empty($errors)) {
-    // Iterate over each uploaded image
-    for ($i = 0; $i < $numImages; $i++) {
-      // Access individual image properties
-      $imageName = $images['name'][$i];
-      $imageSize = $images['size'][$i];
-      $imageTmpName = $images['tmp_name'][$i];
-      $imageError = $images['error'][$i];
 
-      // Check for upload errors
-      if ($imageError !== 0) {
-        $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
-      } else {
-        $maxSize = 1000 * 1000;
-
-        // Validate image size
-        if ($imageSize > $maxSize) {
-          $errors[] = 'La imagen ' . $imageName . ' debe tener un tamaño máximo de 1MB';
-        } else {
-          // Create images folder
-          $folderImages = '../../images/';
-
-          if (!is_dir($folderImages)) {
-            mkdir($folderImages);
-          }
-
-          // Generate unique filename
-          do {
-            $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
-
-            // Check if file name already exists in DB
-            if ($type == 1) {
-              $stmt = $db->prepare("SELECT COUNT(*) FROM realestates WHERE images = :nameImage");
-              $stmt->bindParam(':nameImage', $nameImage);
-              $stmt->execute();
-              $count = $stmt->fetchColumn();
-            } elseif ($type == 2) {
-              $stmt = $db->prepare("SELECT COUNT(*) FROM rentals WHERE images = :nameImage");
-              $stmt->bindParam(':nameImage', $nameImage);
-              $stmt->execute();
-              $count = $stmt->fetchColumn();
-            }
-          } while ($count > 0);
-
-          // Upload images
-          move_uploaded_file($imageTmpName, $folderImages . $nameImage);
-
-          // Add image name to array
-          $imageNames[] = $nameImage;
-        }
-      }
+    // Create images folder
+    if (!is_dir(FOLDER_IMAGES)) {
+      mkdir(FOLDER_IMAGES);
     }
 
-    // Convert image names array to string
-    $imageNamesStr = implode(',', $imageNames);
-
-    // Validate total size of image names string
-    if (strlen($imageNamesStr) > 500) {
-      $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
-    }
+    // Save images into server
+    $imageS->save(FOLDER_IMAGES . $nameImage);
 
     // Insert into DB and result of insertion
     $writeDB = $property->insert($type);

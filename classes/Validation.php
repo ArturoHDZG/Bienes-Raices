@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace App;
 
-class Validator
+class Validation
 {
   private $errors = [];
 
@@ -39,6 +39,22 @@ class Validator
   {
     if (!$canton) {
       $this->errors[] = 'Selecciona un cantón';
+    }
+  }
+
+  public function validateImages($images)
+  {
+    $noImages = true;
+    if (isset($images['name']) && is_array($images['name'])) {
+      foreach ($images['name'] as $imageName) {
+        if ($imageName) {
+          $noImages = false;
+          break;
+        }
+      }
+    }
+    if ($noImages) {
+      $this->errors[] = 'Debes agregar al menos una imagen';
     }
   }
 
@@ -91,6 +107,7 @@ class Validator
     $this->validatePrice($data['price'] ?? null);
     $this->validateProvince($data['province'] ?? null);
     $this->validateCanton($data['canton'] ?? null);
+    $this->validateImages($data['images'] ?? null);
     $this->validateDescription($data['description'] ?? null);
     $this->validateRooms($data['rooms'] ?? null);
     $this->validateWc($data['wc'] ?? null);

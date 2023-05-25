@@ -66,6 +66,14 @@ class Property
     return $stmt->execute($attributes);
   }
 
+  // Assign image names to attribute
+  public function setImages($imageNamesStr)
+  {
+    if ($imageNamesStr) {
+      $this->images = $imageNamesStr;
+    }
+  }
+
   // Convert values to an associative array
   public function attributes()
   {

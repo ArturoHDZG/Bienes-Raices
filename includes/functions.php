@@ -22,3 +22,9 @@ function login()
     header("Location:/");
   }
 }
+
+// Format currency input field
+function formatPrice($price)
+{
+  return str_replace(',', '', $price);
+}
