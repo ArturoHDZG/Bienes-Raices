@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace App;
 
 class Property
@@ -34,7 +35,12 @@ class Property
     $this->id = $args['id'] ?? '';
     $this->title = $args['title'] ?? '';
     $this->currency = $args['currency'] ?? '';
-    $this->price = $args['price'] ?? '';
+    // Formatting price value
+    if (isset($args['price'])) {
+      $this->price = $this->formatPrice($args['price']);
+    } else {
+      $this->price = '';
+    }
     $this->province = $args['province'] ?? '';
     $this->canton = $args['canton'] ?? '';
     $this->images = $args['images'] ?? '';
@@ -44,6 +50,12 @@ class Property
     $this->parking = $args['parking'] ?? '';
     $this->date = date('Y-m-d');
     $this->vendorId = $args['vendorId'] ?? '';
+  }
+
+  // Agrega la función formatPrice dentro de la clase Property
+  private function formatPrice($price)
+  {
+    return str_replace(',', '', $price);
   }
 
   public function insert($type)

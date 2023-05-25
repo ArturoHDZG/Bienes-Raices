@@ -7,7 +7,7 @@ require_once '../../includes/app.php';
 
 use App\Property;
 use App\Validation;
-use Intervention\Image\ImageManagerStatic as ImageManager;
+use App\ImagesUpload;
 
 // Instances
 $property = new Property($_POST);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Filled input fields if user make a mistake
   $title = $_POST['title'];
-  $price = formatPrice($_POST['price']);
+  $price = $_POST['price'];
   $description = $_POST['description'];
   $rooms = $_POST['rooms'];
   $wc = $_POST['wc'];
@@ -75,25 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $vendorId = $_POST['vendorId'];
   }
 
-  // Set an array to save all image instances
-  $imageInstances = [];
-
-  // Resize and set images names to DB and Server
-  if (!empty($images['tmp_name'][0])) {
-    $imageInstances = [];
-
-    foreach ($images['tmp_name'] as $key => $image) {
-      $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
-
-      $img = ImageManager::make($image);
-
-      $img->fit(800, 600);
-
-      $imageInstances[] = ['instance' => $img, 'name' => $nameImage];
-
-      $imageNames[] = $nameImage;
-    }
-  }
+  // Processing images
+  $imagesUpload = new ImagesUpload($_FILES['images']);
+  $imageInstances = $imagesUpload->processImages();
 
   // Error messages
   $validation->validateAll($_POST, $_FILES);
@@ -102,19 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Valid form
   if (empty($errors)) {
 
-    // Create images folder
-    if (!is_dir(FOLDER_IMAGES)) {
-      mkdir(FOLDER_IMAGES);
-    }
-
-    // Set image names into DB
-    $imageNamesStr = implode(',', $imageNames);
-    $property->setImages($imageNamesStr);
-
-    // Save images into server
-    foreach ($imageInstances as $imageInstance) {
-      $imageInstance['instance']->save(FOLDER_IMAGES . $imageInstance['name']);
-    }
+    // Upload images to server and insert to DB
+    $imagesUpload->saveImages($imageInstances, FOLDER_IMAGES, $property);
 
     // Insert into DB and result of insertion
     $writeDB = $property->insert($type);
