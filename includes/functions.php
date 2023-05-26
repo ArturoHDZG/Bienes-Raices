@@ -28,3 +28,9 @@ function formatPrice($price)
 {
   return str_replace(',', '', $price);
 }
+
+// Sanitize HTML
+function s($html) : string
+{
+  return htmlspecialchars($html);
+}

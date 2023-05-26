@@ -104,4 +104,23 @@ class Property
       ':vendorId' => $this->vendorId
     ];
   }
+
+  // List all properties
+  public static function all($type)
+  {
+    global $db;
+
+    if ($type == 1) {
+      $stmt = $db->query("SELECT * FROM realestates");
+    } elseif ($type == 2) {
+      $stmt = $db->query("SELECT * FROM rentals");
+    }
+
+    $results = [];
+    while ($row = $stmt->fetchObject()) {
+      $results[] = $row;
+    }
+
+    return $results;
+  }
 }

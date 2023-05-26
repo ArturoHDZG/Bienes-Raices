@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 namespace App;
 
 use Intervention\Image\ImageManagerStatic as ImageManager;
@@ -18,16 +17,24 @@ class ImagesUpload
   public function processImages()
   {
     $imageInstances = [];
+    $maxImages = 10;
+
     if (!empty($this->images['tmp_name'][0])) {
-      $imageInstances = [];
-      foreach ($this->images['tmp_name'] as $image) {
-        $nameImage = substr(md5(uniqid('', true)), 0, 16) . '.jpg';
-        $img = ImageManager::make($image);
-        $img->fit(800, 600);
-        $imageInstances[] = ['instance' => $img, 'name' => $nameImage];
-        $imageNames[] = $nameImage;
+      $imageCount = count($this->images['tmp_name']);
+
+      if ($imageCount > $maxImages) {
+        return false;
+      } else {
+        foreach ($this->images['tmp_name'] as $image) {
+          $nameImage = substr(md5(uniqid('', true)), 0, 16) . '.jpg';
+          $img = ImageManager::make($image);
+          $img->fit(800, 600);
+          $imageInstances[] = ['instance' => $img, 'name' => $nameImage];
+          $imageNames[] = $nameImage;
+        }
       }
     }
+
     return $imageInstances;
   }
 
@@ -49,8 +56,3 @@ class ImagesUpload
     }
   }
 }
-
-//* Código temporal
-
-// Limit number of uploaded images to 10
-// $maxImages = 10;

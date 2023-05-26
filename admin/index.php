@@ -5,29 +5,18 @@ ob_start();
 // Imports
 require_once '../includes/app.php';
 
+use App\Property;
+
 // URL protection
 login();
 
-// Database connection
-$db = connectionBD();
-
-// Database query
+// Set initial variables
 $type = '';
-$query = '';
 
+// Database query for show properties
 if (isset($_GET['type'])) {
   $type = ($_GET['type']);
-}
-
-if ($type == 1) {
-  $query = "SELECT * FROM realestates";
-} elseif ($type == 2) {
-  $query = "SELECT * FROM rentals";
-}
-
-// Database answer
-if (!empty($query)) {
-  $answer = $db->query($query);
+  $result = Property::all($type);
 }
 
 // Get table name for use in URL
@@ -41,7 +30,7 @@ if (isset($_GET['type'])) {
   }
 }
 
-// Show property creation message
+// Show property messages
 $message = $_GET['result'] ?? null;
 
 // Delete properties
@@ -57,17 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $queryImages = "SELECT images FROM rentals WHERE id = {$id}";
   }
 
-  $answerImages = $db->query($queryImages);
-  $property = $answerImages->fetch(PDO::FETCH_ASSOC);
+  $propertyImages = $db->query($queryImages);
+  $property = $propertyImages->fetch(PDO::FETCH_ASSOC);
   $images = explode(',', $property['images']);
 
   foreach ($images as $image) {
     unlink('../images/' . $image);
   }
 
-  $answer = $db->query($query);
+  $property = $db->query($query);
 
-  if ($answer) {
+  if ($property) {
     header("Location:/admin?result=3", true, 303);
   }
 }
@@ -130,23 +119,24 @@ includeTemplate('header');
           <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio.</td>
         </tr>
 
-      <?php elseif (isset($answer) && $answer->rowCount() > 0) : ?>
+      <?php elseif (isset($result) && !empty($result)) : ?>
 
-        <?php while ($property = $answer->fetch(PDO::FETCH_ASSOC)) : ?>
+        <?php foreach ($result as $property) : ?>
           <tr>
 
-            <td><?php echo $property['date']; ?></td>
+            <td><?php echo $property->date; ?></td>
 
             <td>
-              <a href="../classifiedad.php?id=<?php echo $property['id'] ?>&source=<?php echo $source ?>" target="_blank" rel="noopener noreferrer"><?php echo $property['title']; ?></a>
+              <a href="../classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
+              target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?></a>
             </td>
 
             <td>
 
               <?php
 
-              if (isset($property['images'])) {
-                $images = explode(',', $property['images']);
+              if (isset($property->images)) {
+                $images = explode(',', $property->images);
                 $firstImage = $images[0];
               }
 
@@ -155,25 +145,23 @@ includeTemplate('header');
               <img src="/images/<?php echo $firstImage; ?>" alt="Imagen Principal Propiedad" class="table-image">
             </td>
 
-            <td><?php echo $property['currency'] . number_format($property['price'], 2) ?></td>
+            <td><?php echo $property->currency . number_format($property->price, 2) ?></td>
 
             <td>
 
               <form class="form" method="POST">
-
-                <input type="hidden" name="id" value="<?php echo $property['id']; ?>">
+                <input type="hidden" name="id" value="<?php echo $property->id; ?>">
                 <input type="submit" class="btn-redBlock" value="Eliminar">
-
               </form>
 
-              <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property['id']; ?>
-                      &table_name=<?php echo $tableName; ?>">Modificar</a>
+              <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property->id; ?>
+              &table_name=<?php echo $tableName; ?>">Modificar</a>
 
             </td>
 
           </tr>
 
-        <?php endwhile; ?>
+        <?php endforeach; ?>
 
       <?php else : ?>
 

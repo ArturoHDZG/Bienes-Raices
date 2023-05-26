@@ -3,6 +3,8 @@
 declare(strict_types=1);
 namespace App;
 
+use App\ImagesUploader;
+
 class Validation
 {
   private $errors = [];
@@ -100,7 +102,16 @@ class Validation
     }
   }
 
-  public function validateAll($data, $files)
+  public function validateImageCount($imageInstances)
+  {
+    $maxImages = 10;
+    if ($imageInstances === false) {
+      $this->errors[] = 'Demasiadas imágenes. El número máximo permitido es ' . $maxImages;
+    }
+  }
+
+
+  public function validateAll($data, $files, $imageInstances)
   {
     $this->validateTitle($data['title'] ?? null);
     $this->validateCurrency($data['currency'] ?? null);
@@ -114,6 +125,7 @@ class Validation
     $this->validateParking($data['parking'] ?? null);
     $this->validateType($data['type'] ?? null);
     $this->validateVendorId($data['vendorId'] ?? null);
+    $this->validateImageCount($imageInstances);
   }
 
   public function getErrors()
