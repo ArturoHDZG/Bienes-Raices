@@ -30,6 +30,13 @@ if (isset($_GET['type'])) {
   }
 }
 
+// Assign table for properties
+if ($type == 1) {
+  $source = 'realestates';
+} elseif ($type == 2) {
+  $source = 'rentals';
+}
+
 // Show property messages
 $message = $_GET['result'] ?? null;
 
@@ -59,13 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($property) {
     header("Location:/admin?result=3", true, 303);
   }
-}
-
-// Assign table for properties
-if ($type == 1) {
-  $source = 'realestates';
-} elseif ($type == 2) {
-  $source = 'rentals';
 }
 
 // View Template
@@ -178,9 +178,6 @@ includeTemplate('header');
 </main>
 
 <?php
-
-// Close DB connection
-$db = null;
 
 // View Template
 includeTemplate('footer');

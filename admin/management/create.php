@@ -10,8 +10,8 @@ use App\Validation;
 use App\ImagesUpload;
 
 // Instances
-$property = new Property($_POST);
-$validation = new Validation();
+$property = new Property;
+$validation = new Validation;
 
 // URL protection
 login();
@@ -19,35 +19,21 @@ login();
 // Define starting errors array
 $errors = [];
 
-// Define starting variables
+// Define necessary starting variables
+$canton = '';
 $type = '';
 $vendorId = '';
+$imagesOutput = '';
+
+$includeHiddenField = false;
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  // Filled input fields if user make a mistake
-  $title = $_POST['title'];
-  $price = $_POST['price'];
-  $description = $_POST['description'];
-  $rooms = $_POST['rooms'];
-  $wc = $_POST['wc'];
-  $parking = $_POST['parking'];
-  $date = date('Y-m-d');
+  // Instances
+  $property = new Property($_POST);
 
-  // Filled not input field variables
-  if (isset($_POST['currency'])) {
-    $currency = $_POST['currency'];
-  }
-
-  if (isset($_FILES['images'])) {
-    $images = $_FILES['images'];
-  }
-
-  if (isset($_POST['province'])) {
-    $province = $_POST['province'];
-  }
-
+  // Save canton selection from JS
   if (isset($_POST['canton'])) {
     $canton = $_POST['canton'];
   }
@@ -56,12 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $type = $_POST['type'];
   }
 
-  if (isset($_POST['vendorId'])) {
-    $vendorId = $_POST['vendorId'];
-  }
-
   // Processing images
-  $imagesUpload = new ImagesUpload($_FILES['images']);
+  $imagesUpload = new ImagesUpload($_FILES);
   $imageInstances = $imagesUpload->processImages();
 
   // Error messages
@@ -70,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Valid form
   if (empty($errors)) {
-
     // Upload images to server and insert to DB
     $imagesUpload->saveImages($imageInstances, FOLDER_IMAGES, $property);
 
@@ -83,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 }
+
+// Send $canton value to app.js to use in fetch canton menu
+cantonValue($canton);
 
 // View Template
 includeTemplate('header');
@@ -112,10 +96,6 @@ includeTemplate('header');
   </form>
 
 </main>
-
-<script>
-  const cantonValue = <?php echo json_encode($canton); ?>;
-</script>
 
 <?php
 

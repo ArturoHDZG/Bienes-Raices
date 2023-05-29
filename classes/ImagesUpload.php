@@ -19,13 +19,12 @@ class ImagesUpload
     $imageInstances = [];
     $maxImages = 10;
 
-    if (!empty($this->images['tmp_name'][0])) {
-      $imageCount = count($this->images['tmp_name']);
-
+    if (!empty($this->images['images']['tmp_name'][0])) {
+      $imageCount = count($this->images['images']['tmp_name']);
       if ($imageCount > $maxImages) {
         return false;
       } else {
-        foreach ($this->images['tmp_name'] as $image) {
+        foreach ($this->images['images']['tmp_name'] as $image) {
           $nameImage = substr(md5(uniqid('', true)), 0, 16) . '.jpg';
           $img = ImageManager::make($image);
           $img->fit(800, 600);

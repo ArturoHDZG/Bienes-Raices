@@ -108,19 +108,71 @@ class Property
   // List all properties
   public static function all($type)
   {
-    global $db;
-
     if ($type == 1) {
-      $stmt = $db->query("SELECT * FROM realestates");
+      $stmt = self::$db->query("SELECT * FROM realestates");
     } elseif ($type == 2) {
-      $stmt = $db->query("SELECT * FROM rentals");
+      $stmt = self::$db->query("SELECT * FROM rentals");
     }
 
+    return self::mapData($stmt);
+  }
+
+  // List property by Table and ID
+  public static function find($id, $tableName)
+  {
+    if ($tableName == 'realestates') {
+      $stmt = self::$db->prepare("SELECT * FROM realestates WHERE id = :id");
+    } elseif ($tableName == 'rentals') {
+      $stmt = self::$db->prepare("SELECT * FROM rentals WHERE id = :id");
+    }
+    $stmt->execute([':id' => $id]);
+
+    $results = self::mapData($stmt);
+    return array_shift($results);
+  }
+
+  // Mapping queries
+  protected static function mapData($stmt)
+  {
     $results = [];
-    while ($row = $stmt->fetchObject()) {
-      $results[] = $row;
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+      foreach ($row as $key => $value) {
+        if ($key != 'date') {
+          $row[$key] = strval($value);
+        }
+      }
+      $results[] = new self($row);
     }
 
     return $results;
+  }
+
+  // Show images from selected property
+  public function showImages()
+  {
+    $propertyImages = $this->images;
+    $imagesArray = explode(",", $propertyImages);
+
+    foreach ($imagesArray as $image) {
+      echo '<div class="thumbnail">';
+      echo '<img class="thumb" src="/images/' . $image . '" data-image="' . $image . '" alt="Miniatura de la propiedad">';
+      echo '<span class="delete">x</span>';
+      echo '</div>';
+    }
+
+    $imagesOutput = ob_get_contents();
+    ob_clean();
+
+    return $imagesOutput;
+  }
+
+  // Modify map in properties
+  public function modifyMap($args = [])
+  {
+    foreach ($args as $key => $value) {
+      if (property_exists($this, $key) && !is_null($value)) {
+        $this->$key = $value;
+      }
+    }
   }
 }

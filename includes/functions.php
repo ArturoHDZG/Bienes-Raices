@@ -34,3 +34,9 @@ function s($html) : string
 {
   return htmlspecialchars($html);
 }
+
+// Send Canton Value to JS
+function cantonValue($canton)
+{
+  echo "<script>const cantonValue = '$canton';</script>";
+}

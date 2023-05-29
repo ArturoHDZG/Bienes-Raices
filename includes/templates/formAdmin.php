@@ -3,11 +3,7 @@
   <legend>Información de la Propiedad</legend>
 
   <label for="title">Título del Anuncio:</label>
-  <input
-  id="title"
-  name="title"
-  type="text"
-  placeholder="Título del Anuncio" value="<?php echo s($property->title); ?>">
+  <input id="title" name="title" type="text" placeholder="Título del Anuncio" value="<?php echo s($property->title); ?>">
 
   <div class="currency-price">
 
@@ -15,8 +11,8 @@
       <label for="currency">Moneda:</label>
       <select name="currency" id="currency">
         <option value="0" disabled selected>-- Seleccionar --</option>
-        <option value="CRC ₡" <?php echo ($currency == 'CRC ₡') ? 'selected' : ''; ?>>Colones-CRC₡</option>
-        <option value="USD $" <?php echo ($currency == 'USD $') ? 'selected' : ''; ?>>Dólares-USD$</option>
+        <option value="CRC ₡" <?php echo ($property->currency == 'CRC ₡') ? 'selected' : ''; ?>>Colones-CRC₡</option>
+        <option value="USD $" <?php echo ($property->currency == 'USD $') ? 'selected' : ''; ?>>Dólares-USD$</option>
       </select>
     </div>
 
@@ -34,10 +30,7 @@
       <select name="province" id="province">
         <option value="0" disabled selected>-- Seleccionar --</option>
         <?php while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) : ?>
-          <option
-            value="<?= $rowProvince['id'] ?>"
-            <?= (!isset($province) && $rowProvince['id'] == 0) ||
-            (isset($province) && $province == $rowProvince['id']) ? 'selected' : '' ?>>
+          <option value="<?= $rowProvince['id'] ?>" <?= (!isset($property->province) && $rowProvince['id'] == 0) || (isset($property->province) && $property->province == $rowProvince['id']) ? 'selected' : '' ?>>
             <?= $rowProvince['province'] ?>
           </option>
         <?php endwhile; ?>
@@ -57,7 +50,12 @@
   <label for="images">Imágenes:</label>
   <input id="images" type="file" accept="image/jpeg, image/png" name="images[]" multiple>
   <p id="image-counter"></p>
-  <div class="thumbnails-container"></div>
+  <div class="thumbnails-container">
+    <?php echo $imagesOutput; ?>
+  </div>
+  <?php if ($includeHiddenField) : ?>
+    <input type="hidden" name="imagesToDelete" id="imagesToDelete" value="">
+  <?php endif; ?>
 
   <label for="description">Descripción del Anuncio</label>
   <textarea id="description" name="description"><?php echo s($property->description); ?></textarea>
@@ -69,34 +67,13 @@
   <legend>Características de la Propiedad</legend>
 
   <label for="rooms">Habitaciones:</label>
-  <input
-  id="rooms"
-  name="rooms"
-  type="number"
-  placeholder="Ej: 3"
-  min="1"
-  max="9"
-  value="<?php echo s($property->rooms); ?>">
+  <input id="rooms" name="rooms" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->rooms); ?>">
 
   <label for="wc">Baños:</label>
-  <input
-  id="wc"
-  name="wc"
-  type="number"
-  placeholder="Ej: 3"
-  min="1"
-  max="9"
-  value="<?php echo s($property->wc); ?>">
+  <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->wc); ?>">
 
   <label for="parking">Lugares de Estacionamiento:</label>
-  <input
-  id="parking"
-  name="parking"
-  type="number"
-  placeholder="Ej: 3"
-  min="1"
-  max="9"
-  value="<?php echo s($property->parking); ?>">
+  <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->parking); ?>">
 
 </fieldset>
 
