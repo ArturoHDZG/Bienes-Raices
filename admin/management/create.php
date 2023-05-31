@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Valid form
   if (empty($errors)) {
-    // Upload images to server and insert to DB
+    // Upload images to server and insert name fot DB
     $imagesUpload->saveImages($imageInstances, FOLDER_IMAGES, $property);
 
     // Insert into DB and result of insertion

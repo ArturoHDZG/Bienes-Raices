@@ -45,25 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $id = $_POST['id'];
   $id = filter_var($id, FILTER_VALIDATE_INT);
 
-  if ($type == '1' && $id) {
-    $query = "DELETE FROM realestates WHERE id = {$id}";
-    $queryImages = "SELECT images FROM realestates WHERE id = {$id}";
-  } elseif ($type == '2' && $id) {
-    $query = "DELETE FROM rentals WHERE id = {$id}";
-    $queryImages = "SELECT images FROM rentals WHERE id = {$id}";
+  if ($id) {
+    $property = Property::find($id, $tableName);
+    $deleteDB = $property->delete($type);
   }
 
-  $propertyImages = $db->query($queryImages);
-  $property = $propertyImages->fetch(PDO::FETCH_ASSOC);
-  $images = explode(',', $property['images']);
-
-  foreach ($images as $image) {
-    unlink('../images/' . $image);
-  }
-
-  $property = $db->query($query);
-
-  if ($property) {
+  if ($deleteDB) {
     header("Location:/admin?result=3", true, 303);
   }
 }

@@ -62,92 +62,43 @@ $imagesOutput = $property->showImages();
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Read and change property attributes from POST
+  if (isset($_POST['type'])) {
+    $type = $_POST['type'];
+  }
+
   $args = $_POST;
   $property->modifyMap($args);
 
-  // Processing images
-  $imagesUpload = new ImagesUpload($_FILES['images']);
+  // Processing loaded images
+  $imagesUpload = new ImagesUpload($_FILES);
   $imageInstances = $imagesUpload->processImages();
 
   // Error messages
-  $validation->validateAll($_POST, $_FILES, $imageInstances);
+  $data = get_object_vars($property);
+  $validation->validateAll($data, $_FILES, $imageInstances);
   $errors = $validation->getErrors();
 
-  exit;
   // Valid form
   if (empty($errors)) {
+    // Process old, new and removed images
+    $imageNames = array_column($imageInstances, 'name');
+    $propertyImages = explode(',', $property->images);
 
-    // Upload images to server and insert to DB
+    $imagesUpload->combineArrays($imageNames, $propertyImages);
+    $imagesUpload->deleteImagesFromPost($_POST, FOLDER_IMAGES);
+    $imageNamesStr = $imagesUpload->processImageNames();
     $imagesUpload->saveImages($imageInstances, FOLDER_IMAGES, $property);
-
-    // Insert into DB and result of insertion
-    $writeDB = $property->insert($type);
-
-    // Convert $propertyImages and $imageNamesStr into arrays
-    $propertyImagesArray = explode(',', $propertyImages);
-    $imageNamesArray = explode(',', $imageNamesStr);
-
-    // Combine arrays and delete duplicate values
-    $allImagesArray = array_unique(array_merge($propertyImagesArray, $imageNamesArray));
-
-    // Convert combined array into a string
-    $imageNamesStr = implode(',', $allImagesArray);
-    $imageNamesStr = trim($imageNamesStr, ',');
-
-    // Get images names for images to delete
-    $imagesToDelete = $_POST['imagesToDelete'];
-
-    // Convert string into array
-    $imagesToDeleteArray = explode(',', $imagesToDelete);
-
-    // Remove empty strings from the array
-    $imagesToDeleteArray = array_filter($imagesToDeleteArray);
-
-    // Iterate over the array and delete each image from the server
-    foreach ($imagesToDeleteArray as $imageName) {
-      unlink($folderImages . $imageName);
-    }
-
-    // Convert images string into an array
-    $imagesArray = explode(',', $imageNamesStr);
-
-    // Delete image names of the array
-    $imagesArray = array_diff($imagesArray, $imagesToDeleteArray);
-
-    // Convert resulting array into string
-    $imageNamesStr = implode(',', $imagesArray);
 
     // Validate for ad type changes
     $typeChanged = ($originalType != $type);
 
     // Query into db
     if ($typeChanged) {
-
       // Delete row registry by correct table
-      if ($originalType == '1') {
-        $deleteQuery = "DELETE FROM realestates WHERE id = '$id'";
-      } elseif ($originalType == '2') {
-        $deleteQuery = "DELETE FROM rentals WHERE id = '$id'";
-      }
-
-      // Delete from DB
-      $deleteDB = $db->prepare($deleteQuery);
-      $deleteDB->execute();
+      $deleteDB = $property->delete($originalType);
 
       // Insert new row registry by ad type change
-      if ($type == '1') {
-
-        $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-        VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
-      } elseif ($type == '2') {
-
-        $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-        VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
-      }
-
-      // Insert into db
-      $writeDB = $db->prepare($query);
-      $writeDB->execute();
+      $writeDB = $property->insert($type);
 
       if ($writeDB) {
         header("Location:/admin?result=2", true, 303);
@@ -155,24 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       }
     } else {
       // Update row registry into correct table
-      if ($originalType == '1') {
-
-        $updateQuery = "UPDATE realestates SET title='$title', currency='$currency', price='$price',
-          province='$province', canton='$canton', images='$imageNamesStr', description='$description',
-          rooms='$rooms', wc='$wc', parking='$parking', date='$date', vendors_id='$vendors_id' WHERE id = '$id'";
-      } elseif ($originalType == '2') {
-
-        $updateQuery = "UPDATE rentals SET title='$title', currency='$currency', price='$price',
-          province='$province', canton='$canton', images='$imageNamesStr', description='$description',
-          rooms='$rooms', wc='$wc', parking='$parking', date='$date', vendors_id='$vendors_id' WHERE id = '$id'";
-      }
-
-      // Update DB
-      $updateDB = $db->prepare($updateQuery);
-      $updateDB->execute();
+      $updateDB = $property->update($originalType);
 
       if ($updateDB) {
-
         header("Location:/admin?result=2", true, 303);
         exit;
       }

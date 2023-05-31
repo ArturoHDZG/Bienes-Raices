@@ -35,12 +35,7 @@ class Property
     $this->id = $args['id'] ?? '';
     $this->title = $args['title'] ?? '';
     $this->currency = $args['currency'] ?? '';
-    // Formatting price value
-    if (isset($args['price'])) {
-      $this->price = $this->formatPrice($args['price']);
-    } else {
-      $this->price = '';
-    }
+    $this->price = $args['price'] ?? '';
     $this->province = $args['province'] ?? '';
     $this->canton = $args['canton'] ?? '';
     $this->images = $args['images'] ?? '';
@@ -48,34 +43,99 @@ class Property
     $this->rooms = $args['rooms'] ?? '';
     $this->wc = $args['wc'] ?? '';
     $this->parking = $args['parking'] ?? '';
-    $this->date = date('Y-m-d');
+    $this->date = $args['date'] ?? '';
     $this->vendorId = $args['vendorId'] ?? '';
   }
 
-  // Agrega la función formatPrice dentro de la clase Property
+  // Format input price
   private function formatPrice($price)
   {
     return str_replace(',', '', $price);
   }
 
+  // Create property into DB
   public function insert($type)
   {
-    // Get property values
-    $attributes = $this->attributes();
+    if ($type == '1') {
+      $table = 'realestates';
+    } elseif ($type == '2') {
+      $table = 'rentals';
+    }
 
-    // Build column and value lists
+    $attributes = $this->attributes();
+    foreach ($attributes as $key => $value) {
+      if ($key == ':price') {
+        $attributes[$key] = $this->formatPrice($value);
+      }
+    }
+
     $columns = implode(', ', array_map(function ($key) { return ltrim($key, ':'); }, array_keys($attributes)));
     $values = implode(', ', array_keys($attributes));
 
-    // Query into db
-    if ($type == 1) {
-      $query = "INSERT INTO realestates ($columns) VALUES ($values)";
-    } elseif ($type == 2) {
-      $query = "INSERT INTO rentals ($columns) VALUES ($values)";
+    $query = "INSERT INTO {$table} ({$columns}) VALUES ({$values})";
+    $stmt = self::$db->prepare($query);
+    return $stmt->execute($attributes);
+  }
+
+  // Modify property from DB
+  public function update($type)
+  {
+    if ($type == '1') {
+      $table = 'realestates';
+    } elseif ($type == '2') {
+      $table = 'rentals';
+    }
+
+    $attributes = $this->attributes();
+    foreach ($attributes as $key => $value) {
+      if ($key == ':price') {
+        $attributes[$key] = $this->formatPrice($value);
+      }
+    }
+
+    $values = [];
+    $bindValues = [];
+    foreach ($attributes as $key => $value) {
+      $key = substr($key, 1);
+      $values[] = "{$key}=:{$key}";
+      $bindValues[":{$key}"] = $value;
+    }
+    $setValues = implode(", ", $values);
+
+    $query = "UPDATE {$table} SET {$setValues} WHERE id = :id LIMIT 1";
+    $stmt = self::$db->prepare($query);
+    foreach ($bindValues as $key => $value) {
+      $stmt->bindValue($key, $value);
+    }
+    $stmt->bindValue(':id', $this->id);
+    return $stmt->execute();
+  }
+
+  // Delete property from DB
+  public function delete($type)
+  {
+    if ($type == '1') {
+      $table = 'realestates';
+    } elseif ($type == '2') {
+      $table = 'rentals';
+    }
+
+    $query = "DELETE FROM {$table} WHERE id = :id LIMIT 1";
+    $queryImages = "SELECT images FROM {$table} WHERE id = :id LIMIT 1";
+
+    $stmt = self::$db->prepare($queryImages);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+    $property = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $images = explode(',', $property['images']);
+
+    foreach ($images as $image) {
+      unlink('../images/' . $image);
     }
 
     $stmt = self::$db->prepare($query);
-    return $stmt->execute($attributes);
+    $stmt->bindValue(':id', $this->id);
+    return $stmt->execute();
   }
 
   // Assign image names to attribute
@@ -152,16 +212,14 @@ class Property
   {
     $propertyImages = $this->images;
     $imagesArray = explode(",", $propertyImages);
+    $imagesOutput = '';
 
     foreach ($imagesArray as $image) {
-      echo '<div class="thumbnail">';
-      echo '<img class="thumb" src="/images/' . $image . '" data-image="' . $image . '" alt="Miniatura de la propiedad">';
-      echo '<span class="delete">x</span>';
-      echo '</div>';
+      $imagesOutput .= '<div class="thumbnail">';
+      $imagesOutput .= '<img class="thumb" src="/images/' . $image . '" alt="Miniatura de la propiedad">';
+      $imagesOutput .= '<span class="delete">x</span>';
+      $imagesOutput .= '</div>';
     }
-
-    $imagesOutput = ob_get_contents();
-    ob_clean();
 
     return $imagesOutput;
   }

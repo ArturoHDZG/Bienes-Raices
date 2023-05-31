@@ -42,19 +42,29 @@ class Validation
     }
   }
 
-  public function validateImages($images)
+  public function validateImages($images, $dataImages)
   {
     $noImages = true;
     if (isset($images['name']) && is_array($images['name'])) {
       foreach ($images['name'] as $imageName) {
         if ($imageName) {
           $noImages = false;
-          break;
         }
       }
     }
+    if (isset($dataImages) && !empty($dataImages)) {
+      $noImages = false;
+    }
     if ($noImages) {
       $this->errors[] = 'Debes agregar al menos una imagen';
+    }
+  }
+
+  public function validateImageCount($imageInstances)
+  {
+    $maxImages = 10;
+    if ($imageInstances === false) {
+      $this->errors[] = 'Demasiadas imágenes. El número máximo permitido es ' . $maxImages;
     }
   }
 
@@ -100,15 +110,6 @@ class Validation
     }
   }
 
-  public function validateImageCount($imageInstances)
-  {
-    $maxImages = 10;
-    if ($imageInstances === false) {
-      $this->errors[] = 'Demasiadas imágenes. El número máximo permitido es ' . $maxImages;
-    }
-  }
-
-
   public function validateAll($data, $files, $imageInstances)
   {
     $this->validateTitle($data['title'] ?? null);
@@ -116,12 +117,12 @@ class Validation
     $this->validatePrice($data['price'] ?? null);
     $this->validateProvince($data['province'] ?? null);
     $this->validateCanton($data['canton'] ?? null);
-    $this->validateImages($files['images'] ?? null);
+    $this->validateImages($files['images'] ?? null, $data['images'] ?? null);
     $this->validateDescription($data['description'] ?? null);
     $this->validateRooms($data['rooms'] ?? null);
     $this->validateWc($data['wc'] ?? null);
     $this->validateParking($data['parking'] ?? null);
-    $this->validateType($data['type'] ?? null);
+    $this->validateType($_POST['type'] ?? null);
     $this->validateVendorId($data['vendorId'] ?? null);
     $this->validateImageCount($imageInstances);
   }
