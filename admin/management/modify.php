@@ -6,6 +6,7 @@ ob_start();
 require_once '../../includes/app.php';
 
 use App\Property;
+use App\Vendors;
 use App\Validation;
 use App\ImagesUpload;
 
@@ -52,6 +53,9 @@ $includeHiddenField = true;
 // Get property data from correct table
 $property = Property::find($id, $tableName);
 
+// Query for vendors
+$vendors = Vendors::all($type);
+
 // Get starting variables from DB
 $canton = $property->canton;
 $vendorId = $property->vendorId;
@@ -75,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Error messages
   $data = get_object_vars($property);
-  $validation->validateAll($data, $_FILES, $imageInstances);
+  $validation->validateProperty($data, $_FILES, $imageInstances);
   $errors = $validation->getErrors();
 
   // Valid form

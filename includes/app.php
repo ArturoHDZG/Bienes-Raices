@@ -12,16 +12,11 @@ require_once 'config/database.php';
 require_once 'functions.php';
 
 // Classes
-use App\Property;
+use App\ActiveRecord;
 
 // DB Functions
 $db = connectionBD();
-Property::setDB($db);
-
-//* Queries */
-// Query for vendors (create.php, modify.php)
-$queryVendors = "SELECT * FROM vendors";
-$answerVendors = $db->query($queryVendors);
+ActiveRecord::setDB($db);
 
 // Query for provinces (create.php, modify.php)
 $queryProvince = "SELECT * FROM province";

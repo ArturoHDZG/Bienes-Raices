@@ -23,12 +23,6 @@ function login()
   }
 }
 
-// Format currency input field
-function formatPrice($price)
-{
-  return str_replace(',', '', $price);
-}
-
 // Sanitize HTML
 function s($html) : string
 {
@@ -39,4 +33,49 @@ function s($html) : string
 function cantonValue($canton)
 {
   echo "<script>const cantonValue = '$canton';</script>";
+}
+
+// Validate Property/Vendor
+function validateContent($data)
+{
+  $validType = ['property', 'vendor'];
+  return in_array($data, $validType);
+}
+
+// Alert messages
+function message($code)
+{
+  $message = '';
+
+  switch ($code) {
+    case 1:
+      $message = '¡Anuncio creado correctamente!';
+      break;
+
+    case 2:
+      $message = '¡Anuncio actualizado correctamente!';
+      break;
+
+    case 3:
+      $message = '¡Anuncio eliminado correctamente!';
+      break;
+
+    case 4:
+      $message = '¡Vendedor creado correctamente!';
+      break;
+
+    case 5:
+      $message = '¡Vendedor actualizado correctamente!';
+      break;
+
+    case 6:
+      $message = '¡Vendedor eliminado correctamente!';
+      break;
+
+    default:
+      $message = false;
+      break;
+  }
+
+  return $message;
 }

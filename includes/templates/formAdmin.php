@@ -3,7 +3,9 @@
   <legend>Información de la Propiedad</legend>
 
   <label for="title">Título del Anuncio:</label>
-  <input id="title" name="title" type="text" placeholder="Título del Anuncio" value="<?php echo s($property->title); ?>">
+  <input id="title" name="title"
+   type="text" placeholder="Título del Anuncio"
+   value="<?php echo s($property->title); ?>">
 
   <div class="currency-price">
 
@@ -30,8 +32,12 @@
       <select name="province" id="province">
         <option value="0" disabled selected>-- Seleccionar --</option>
         <?php while ($rowProvince = $answerProvince->fetch(PDO::FETCH_ASSOC)) : ?>
-          <option value="<?= $rowProvince['id'] ?>" <?= (!isset($property->province) && $rowProvince['id'] == 0) || (isset($property->province) && $property->province == $rowProvince['id']) ? 'selected' : '' ?>>
-            <?= $rowProvince['province'] ?>
+          <option
+           value="<?= $rowProvince['id'] ?>"
+           <?= (!isset($property->province)
+           && $rowProvince['id'] == 0) ||
+           (isset($property->province) && $property->province == $rowProvince['id']) ? 'selected' : '' ?>>
+           <?= $rowProvince['province'] ?>
           </option>
         <?php endwhile; ?>
       </select>
@@ -67,13 +73,20 @@
   <legend>Características de la Propiedad</legend>
 
   <label for="rooms">Habitaciones:</label>
-  <input id="rooms" name="rooms" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->rooms); ?>">
+  <input id="rooms" name="rooms"
+   type="number" placeholder="Ej: 3"
+   min="1" max="9" value="<?php echo s($property->rooms); ?>">
 
   <label for="wc">Baños:</label>
-  <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->wc); ?>">
+  <input id="wc" name="wc"
+   type="number" placeholder="Ej: 3"
+   min="1" max="9" value="<?php echo s($property->wc); ?>">
 
   <label for="parking">Lugares de Estacionamiento:</label>
-  <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo s($property->parking); ?>">
+  <input
+   id="parking" name="parking"
+   type="number" placeholder="Ej: 3"
+   min="1" max="9" value="<?php echo s($property->parking); ?>">
 
 </fieldset>
 
@@ -88,14 +101,16 @@
     <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Alquiler</option>
   </select>
 
-  <label>Vendedor:</label>
-  <select name="vendorId">
+  <label for="vendor">Vendedor:</label>
+  <select id="vendor" name="vendorId">
     <option value="0" disabled selected>-- Seleccionar --</option>
-    <?php while ($row = $answerVendors->fetch(PDO::FETCH_ASSOC)) : ?>
-      <option value="<?php echo $row['id']; ?>" <?php echo ($vendorId == $row['id']) ? 'selected' : ''; ?>>
-        <?php echo $row['id'] . " - " . $row['name'] . " " . $row['lastname']; ?>
+    <?php foreach ($vendors as $vendor) : ?>
+      <option
+       <?php echo $property->vendorId === $vendor->id ? 'selected' : ''; ?>
+       value="<?php echo s($vendor->id); ?>"
+       ><?php echo s($vendor->name) . " " . s($vendor->lastname); ?>
       </option>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
   </select>
 
 </fieldset>

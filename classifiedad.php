@@ -5,9 +5,6 @@ ob_start();
 // Imports
 require_once 'includes/app.php';
 
-// DB connection
-$db = connectionBD();
-
 // Global Variables
 $id = $_GET['id'];
 $id = filter_var($id, FILTER_VALIDATE_INT);
@@ -18,32 +15,24 @@ $validTableNames = ['realestates', 'rentals'];
 
 // Security GET URL
 if (!in_array($source, $validTableNames) || !$id) {
-
   header("Location:/");
   exit;
-
 }
 
 // DB query
 if ($source === 'realestates') {
-
   $queryId = "SELECT realestates.*, province.province as province_name, canton.canton as canton_name FROM realestates JOIN province ON realestates.province = province.id JOIN canton ON realestates.canton = canton.id WHERE   realestates.id = {$id}";
-
 } elseif ($source === 'rentals') {
-
   $queryId = "SELECT rentals.*, province.province as province_name, canton.canton as canton_name FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id WHERE rentals.id = {$id}";
-
 }
 
-$answerId = mysqli_query($db, $queryId);
-$property = mysqli_fetch_assoc($answerId);
+$answerId = $db->query($queryId);
+$property = $answerId->fetch(PDO::FETCH_ASSOC);
 
 // Security DB query
-if (!$answerId->num_rows) {
-
+if (!$answerId->rowCount()) {
   header("Location:/");
   exit;
-
 }
 
 // View Template
@@ -107,7 +96,7 @@ includeTemplate('header');
 
 <?php
 // Close DB connection
-mysqli_close($db);
+$db = null;
 
 // View Template
 includeTemplate('footer');

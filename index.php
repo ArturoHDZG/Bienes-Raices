@@ -59,7 +59,7 @@ includeTemplate('header', $home = true);
 
       $limit = 3;
       $source = 'realestates';
-      include_once 'includes/templates/ads.php';
+      include 'includes/templates/ads.php';
 
       ?>
 
@@ -69,7 +69,7 @@ includeTemplate('header', $home = true);
 
       $limit = 3;
       $source = 'rentals';
-      include_once 'includes/templates/ads.php';
+      include 'includes/templates/ads.php';
 
       ?>
 

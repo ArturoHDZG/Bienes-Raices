@@ -1,11 +1,34 @@
 <?php
 
-declare(strict_types=1);
 namespace App;
 
 class Validation
 {
   private $errors = [];
+
+  // Show errors
+  public function getErrors()
+  {
+    return $this->errors;
+  }
+
+  // Property validation
+  public function validateProperty($data, $files, $imageInstances)
+  {
+    $this->validateTitle($data['title'] ?? null);
+    $this->validateCurrency($data['currency'] ?? null);
+    $this->validatePrice($data['price'] ?? null);
+    $this->validateProvince($data['province'] ?? null);
+    $this->validateCanton($data['canton'] ?? null);
+    $this->validateImages($files['images'] ?? null, $data['images'] ?? null);
+    $this->validateDescription($data['description'] ?? null);
+    $this->validateRooms($data['rooms'] ?? null);
+    $this->validateWc($data['wc'] ?? null);
+    $this->validateParking($data['parking'] ?? null);
+    $this->validateType($_POST['type'] ?? null);
+    $this->validateVendorId($data['vendorId'] ?? null);
+    $this->validateImageCount($imageInstances);
+  }
 
   public function validateTitle($title)
   {
@@ -110,25 +133,44 @@ class Validation
     }
   }
 
-  public function validateAll($data, $files, $imageInstances)
+  // Vendors validation
+  public function validateVendors($data)
   {
-    $this->validateTitle($data['title'] ?? null);
-    $this->validateCurrency($data['currency'] ?? null);
-    $this->validatePrice($data['price'] ?? null);
-    $this->validateProvince($data['province'] ?? null);
-    $this->validateCanton($data['canton'] ?? null);
-    $this->validateImages($files['images'] ?? null, $data['images'] ?? null);
-    $this->validateDescription($data['description'] ?? null);
-    $this->validateRooms($data['rooms'] ?? null);
-    $this->validateWc($data['wc'] ?? null);
-    $this->validateParking($data['parking'] ?? null);
-    $this->validateType($_POST['type'] ?? null);
-    $this->validateVendorId($data['vendorId'] ?? null);
-    $this->validateImageCount($imageInstances);
+    $this->validateName($data['name'] ?? null);
+    $this->validateLastName($data['lastname'] ?? null);
+    $this->validatePhone($data['phone'] ?? null);
+    $this->validateEmail($data['email'] ?? null);
   }
 
-  public function getErrors()
+  public function validateName($name)
   {
-    return $this->errors;
+    if (!$name) {
+      $this->errors[] = 'El nombre es obligatorio';
+    }
+  }
+
+  public function validateLastName($lastname)
+  {
+    if (!$lastname) {
+      $this->errors[] = 'El Apellido es obligatorio';
+    }
+  }
+
+  public function validatePhone($phone)
+  {
+    if (!$phone) {
+      $this->errors[] = 'El Teléfono es obligatorio';
+    } elseif (!preg_match('/\d{8,10}/', $phone)) {
+      $this->errors[] = 'El Teléfono es inválido';
+    }
+  }
+
+  public function validateEmail($email)
+  {
+    if (!$email) {
+      $this->errors[] = 'El Email es obligatorio';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $this->errors[] = 'El Email es inválido';
+    }
   }
 }

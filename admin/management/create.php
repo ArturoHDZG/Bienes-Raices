@@ -6,6 +6,7 @@ ob_start();
 require_once '../../includes/app.php';
 
 use App\Property;
+use App\Vendors;
 use App\Validation;
 use App\ImagesUpload;
 
@@ -27,6 +28,9 @@ $imagesOutput = '';
 
 $includeHiddenField = false;
 
+// Query for vendors
+$vendors = Vendors::all($type);
+
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -47,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $imageInstances = $imagesUpload->processImages();
 
   // Error messages
-  $validation->validateAll($_POST, $_FILES, $imageInstances);
+  $validation->validateProperty($_POST, $_FILES, $imageInstances);
   $errors = $validation->getErrors();
 
   // Valid form

@@ -3,9 +3,6 @@
 // Imports
 require_once 'includes/app.php';
 
-// DB connection
-$db = connectionBD();
-
 // Check if limit is set
 if (isset($limit) && is_numeric($limit)) {
 
@@ -21,6 +18,7 @@ $result = $db->query($query);
 ?>
 
 <div class="cards-container">
+
   <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)) : ?>
 
     <?php $images = explode(',', $row['images']); ?>
@@ -72,10 +70,3 @@ $result = $db->query($query);
   <?php endwhile; ?>
 
 </div>
-
-<?php
-
-// Close DB connection
-$db = null;
-
-?>

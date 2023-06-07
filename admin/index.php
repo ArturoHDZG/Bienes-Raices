@@ -6,6 +6,7 @@ ob_start();
 require_once '../includes/app.php';
 
 use App\Property;
+use App\Vendors;
 
 // URL protection
 login();
@@ -37,8 +38,11 @@ if ($type == 1) {
   $source = 'rentals';
 }
 
-// Show property messages
-$message = $_GET['result'] ?? null;
+// Get vendors
+$resultVendors = Vendors::all($type);
+
+// Get message code
+$code = $_GET['result'] ?? null;
 
 // Delete properties
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,12 +50,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $id = filter_var($id, FILTER_VALIDATE_INT);
 
   if ($id) {
-    $property = Property::find($id, $tableName);
-    $deleteDB = $property->delete($type);
+    $typeContent = $_POST['adminIndexType'];
+
+    if (validateContent($typeContent)) {
+      if ($typeContent === 'property') {
+        $property = Property::find($id, $tableName);
+        $deleteDB = $property->delete($type);
+      } elseif ($typeContent === 'vendor') {
+        $tableName = 'vendors';
+        $vendor = Vendors::find($id, $tableName);
+        $deleteDBVendor = $vendor->insertDelete();
+      }
+    }
   }
 
   if ($deleteDB) {
     header("Location:/admin?result=3", true, 303);
+  } elseif ($deleteDBVendor) {
+    header("Location:/admin?result=6", true, 303);
   }
 }
 
@@ -62,16 +78,14 @@ includeTemplate('header');
 
 <main class="container section">
 
-  <h1>Administrador de Anuncios</h1>
+  <h1>Panel de Administración</h1>
 
-  <?php if (intval($message) === 1) : ?>
-    <p class="alert success">¡Anuncio creado correctamente!</p>
-  <?php elseif (intval($message) === 2) : ?>
-    <p class="alert success">¡Anuncio actualizado correctamente!</p>
-  <?php elseif (intval($message) === 3) : ?>
-    <p class="alert success">¡Anuncio eliminado correctamente!</p>
+  <?php $message = message(intval($code));
+  if ($message) : ?>
+  <p class="alert success"><?php echo s($message); ?></p>
   <?php endif; ?>
 
+  <h2>Propiedades</h2>
   <div class="admin-topBtn">
     <a href="/admin/management/create.php" class="btn-greenInline">Nuevo Anuncio</a>
   </div>
@@ -103,7 +117,7 @@ includeTemplate('header');
 
       <?php if (empty($type)) : ?>
         <tr>
-          <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio.</td>
+          <td class="alert error" colspan="6">Por favor, selecciona un tipo de anuncio</td>
         </tr>
 
       <?php elseif (isset($result) && !empty($result)) : ?>
@@ -115,7 +129,7 @@ includeTemplate('header');
 
             <td>
               <a href="../classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
-              target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?></a>
+               target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?></a>
             </td>
 
             <td>
@@ -138,6 +152,7 @@ includeTemplate('header');
 
               <form class="form" method="POST">
                 <input type="hidden" name="id" value="<?php echo $property->id; ?>">
+                <input type="hidden" name="adminIndexType" value="property">
                 <input type="submit" class="btn-redBlock" value="Eliminar">
               </form>
 
@@ -157,6 +172,62 @@ includeTemplate('header');
         </tr>
 
       <?php endif; ?>
+
+    </tbody>
+
+  </table>
+
+  <h2>Vendedores</h2>
+  <div class="admin-topBtn">
+    <a href="/admin/vendors/create.php" class="btn-greenInline">Nuevo Vendedor</a>
+  </div>
+
+  <table aria-label="Listado de Propiedades" class="table-list">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <?php if (empty($resultVendors)) : ?>
+        <tr>
+          <td class="alert error" colspan="6">No se encontraron vendedores</td>
+        </tr>
+      <?php endif; ?>
+
+      <?php foreach ($resultVendors as $vendor) : ?>
+        <tr>
+
+          <td><?php echo $vendor->id; ?></td>
+
+          <td><?php echo $vendor->name . " " . $vendor->lastname; ?></td>
+
+          <td><?php echo $vendor->phone; ?></td>
+
+          <td><?php echo $vendor->email; ?></td>
+
+          <td>
+
+            <form class="form" method="POST">
+              <input type="hidden" name="id" value="<?php echo $vendor->id; ?>">
+              <input type="hidden" name="adminIndexType" value="vendor">
+              <input type="submit" class="btn-redBlock" value="Eliminar">
+            </form>
+
+            <a class="btn-orangeBlock" href="/admin/vendors/modify.php?id=<?php echo $vendor->id; ?>">Modificar</a>
+
+          </td>
+
+        </tr>
+
+      <?php endforeach; ?>
 
     </tbody>
 
