@@ -1,7 +1,7 @@
 <?php
 
-// Functions
-require_once 'includes/functions.php';
+// Imports
+require_once 'includes/app.php';
 
 // View Template
 includeTemplate('header');

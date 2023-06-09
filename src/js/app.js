@@ -114,22 +114,29 @@ function initCantonSelect() {
   if (provinceSelect) {
     const selectedProvinceId = provinceSelect.value;
 
-    fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+    fetch(`../../includes/config/cantons.php?province_id=${selectedProvinceId}`)
       .then(response => response.json())
       .then(data => {
+        updateCantonSelect(data, cantonSelect);
         updateCantonSelect(data, cantonSelect);
         if (cantonValue && cantonSelect.querySelector(`option[value="${cantonValue}"]`)) {
           cantonSelect.value = cantonValue;
         }
+      })
+      .catch (error => {
+      console.error(error);
       });
 
     provinceSelect.addEventListener('change', () => {
       const selectedProvinceId = provinceSelect.value;
 
-      fetch(`get_cantons.php?province_id=${selectedProvinceId}`)
+      fetch(`../../includes/config/cantons.php?province_id=${selectedProvinceId}`)
         .then(response => response.json())
         .then(data => {
           updateCantonSelect(data, cantonSelect);
+        })
+        .catch(error => {
+          console.error(error);
         });
     });
   }
@@ -150,6 +157,9 @@ function updateCantonSelect(data, cantonSelect) {
     const option = document.createElement('option');
     option.value = canton.id;
     option.textContent = canton.canton;
+    if (cantonValue && canton.id === cantonValue) {
+      option.selected = true;
+    }
     cantonSelect.appendChild(option);
   });
 }

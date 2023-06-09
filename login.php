@@ -1,16 +1,15 @@
 <?php
-// Functions
-require_once 'includes/functions.php';
+// Imports
+require_once 'includes/app.php';
 
-// URL protection
-$auth = loginOn();
+session_start();
 
-if ($auth) {
-  header("Location:/");
+if (isset($_SESSION['login'])) {
+    header("Location:/home");
+    exit;
 }
 
 // DB connection
-require_once 'includes/config/database.php';
 $db = connectionBD();
 
 // Define error array
@@ -19,33 +18,29 @@ $errors = [];
 // Validate form data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $email = mysqli_real_escape_string($db, filter_var($_POST['email'], FILTER_VALIDATE_EMAIL));
-  $password = mysqli_real_escape_string($db, $_POST['password']);
+  $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+  $password = $_POST['password'];
 
   if (!$email) {
-
     $errors[] = 'Dirección de correo inválida';
-
   }
 
   if (!$password) {
-
     $errors[] = 'Contraseña inválida';
-
   }
 
   if (empty($errors)) {
+    $query = "SELECT * FROM vendors WHERE email = :email";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->execute();
 
-    $query = "SELECT * FROM vendors WHERE email = '{$email}'";
-    $result = mysqli_query($db, $query);
+    $vendor = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows) {
-
-      $vendor = mysqli_fetch_assoc($result);
+    if ($vendor) {
       $auth = password_verify($password, $vendor['password']);
 
       if ($auth) {
-
         session_start();
 
         $_SESSION['name'] = $vendor['name'];
@@ -56,21 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['login'] = true;
 
         header("Location:/admin");
-
       } else {
-
         $errors[] = 'Contraseña incorrecta';
-
       }
-
     } else {
-
       $errors[] = 'Dirección de correo incorrecta';
-
     }
-
   }
-
 }
 
 // View Template

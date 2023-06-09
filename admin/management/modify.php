@@ -2,16 +2,19 @@
 // Header Function Cache
 ob_start();
 
-// Functions
-require_once '../../includes/functions.php';
+// Imports
+require_once '../../includes/app.php';
+
+use App\Property;
+use App\Vendors;
+use App\Validation;
+use App\ImagesUpload;
+
+// Instances
+$validation = new Validation();
 
 // URL protection
-$auth = loginOn();
-
-if (!$auth) {
-
-  header("Location:/");
-}
+login();
 
 // Get property ID and Table_name
 $id = $_GET['id'];
@@ -22,448 +25,103 @@ $tableName = $_GET['table_name'];
 $validTableNames = ['realestates', 'rentals'];
 
 if (!in_array($tableName, $validTableNames) || !$id) {
-
   header("Location:/admin");
-  exit;
 }
 
-// Database connection
-require_once '../../includes/config/database.php';
-$db = connectionBD();
-
-// Get property data from correct table
+// Get variables by title
 if ($tableName == 'realestates') {
-
-  $queryId = "SELECT * FROM realestates WHERE id = {$id}";
-} elseif ($tableName == 'rentals') {
-
-  $queryId = "SELECT * FROM rentals WHERE id = {$id}";
-}
-
-$answerId = mysqli_query($db, $queryId);
-$property = mysqli_fetch_assoc($answerId);
-
-// Query for vendors_id
-$query = "SELECT * FROM vendors";
-$answer = mysqli_query($db, $query);
-
-// Query for provinces
-$queryProvince = "SELECT * FROM province";
-$answerProvince = mysqli_query($db, $queryProvince);
-
-// Query for cantons
-$queryCanton = "SELECT * FROM canton";
-$answerCanton = mysqli_query($db, $queryCanton);
-
-// Get starting variables from DB
-$title = $property['title'];
-$currency = $property['currency'];
-$price = $property['price'];
-$province = $property['province'];
-
-$canton = $property['canton'];
-$canton = filter_var($canton, FILTER_VALIDATE_INT);
-
-$images = '';
-$description = $property['description'];
-$rooms = $property['rooms'];
-$wc = $property['wc'];
-$parking = $property['parking'];
-$vendors_id = $property['vendors_id'];
-
-// Get variables by URL
-if ($tableName == 'realestates') {
-
   $type = '1';
 } elseif ($tableName == 'rentals') {
-
   $type = '2';
 }
 
 if ($tableName == 'realestates') {
-
   $originalType = '1';
 } elseif ($tableName == 'rentals') {
-
   $originalType = '2';
 }
 
-// Show property saved images
-$propertyImages = $property['images'];
-$imagesArray = explode(",", $propertyImages);
-
-foreach ($imagesArray as $image) {
-
-  echo '<div class="thumbnail">';
-  echo '<img class="thumb" src="/images/' . $image . '" data-image="' . $image . '" alt="Miniatura de la propiedad">';
-  echo '<span class="delete">x</span>';
-  echo '</div>';
-
-}
-
-$imagesOutput = ob_get_contents();
-ob_clean();
-
-// Define errors array
+// Define starting errors array
 $errors = [];
 
-// define other variables
-$optionsProvince = '';
+// Define necessary starting variables
+$cantonValue = '';
+$vendorId = '';
 
+$includeHiddenField = true;
 
-// Generate options for province select
-$optionsProvince = '';
+// Get property data from correct table
+$property = Property::find($id, $tableName);
 
-while ($rowProvince = mysqli_fetch_assoc($answerProvince)) {
+// Query for vendors
+$vendors = Vendors::all($type);
 
-  $selected = ($rowProvince['id'] == $province) ? 'selected' : '';
-  $optionsProvince .= "<option value=\"{$rowProvince['id']}\" {$selected}>{$rowProvince['province']}</option>";
+// Get starting variables from DB
+$canton = $property->canton;
+$vendorId = $property->vendorId;
 
-}
+// Show property saved images
+$imagesOutput = $property->showImages();
 
 // Get POST data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-  // Filled input fields if user make a mistake and sanitize
-  $title = mysqli_real_escape_string($db, $_POST['title']);
-  $price = mysqli_real_escape_string($db, $_POST['price']);
-  $description = mysqli_real_escape_string($db, $_POST['description']);
-  $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
-  $wc = mysqli_real_escape_string($db, $_POST['wc']);
-  $parking = mysqli_real_escape_string($db, $_POST['parking']);
-  $date = date('Y-m-d');
-
-  // Not input field variables
-  if (isset($_POST['currency'])) {
-
-    $currency = $_POST['currency'];
-  }
-
-  if (isset($_FILES['images'])) {
-
-    $images = $_FILES['images'];
-  }
-
-  if (isset($_POST['province'])) {
-
-    $province = $_POST['province'];
-  }
-
-  if (isset($_POST['canton'])) {
-
-    $canton = $_POST['canton'];
-  }
-
+  // Read and change property attributes from POST
   if (isset($_POST['type'])) {
-
     $type = $_POST['type'];
   }
 
-  if (isset($_POST['vendors_id'])) {
+  $args = $_POST;
+  $property->modifyMap($args);
 
-    $vendors_id = $_POST['vendors_id'];
-  }
-
-  // Format currency input
-  $price = str_replace(',', '', $price);
+  // Processing loaded images
+  $imagesUpload = new ImagesUpload($_FILES);
+  $imageInstances = $imagesUpload->processImages();
 
   // Error messages
-  if (!$title) {
-
-    $errors[] = 'El titulo del anuncio es obligatorio';
-  }
-
-  if (!$currency) {
-
-    $errors[] = 'La moneda es obligatoria';
-  }
-
-  if (!$price) {
-
-    $errors[] = 'El precio del anuncio es obligatorio';
-  }
-
-  if (!$province) {
-
-    $errors[] = 'Selecciona una provincia';
-  }
-
-  if (!$canton) {
-
-    $errors[] = 'Selecciona un cantón';
-  }
-
-  if (strlen($description) < 50) {
-
-    $errors[] = 'La descripción del anuncio es obligatorio y debe contener al menos 50 caracteres';
-  }
-
-  if (!$rooms) {
-
-    $errors[] = 'El número de habitaciones es obligatorio';
-  }
-
-  if (!$wc) {
-
-    $errors[] = 'El número de baños es obligatorio';
-  }
-
-  if (!$parking) {
-
-    $errors[] = 'El número de lugares de estacionamiento es obligatorio';
-  }
-
-  if (!$type) {
-
-    $errors[] = 'Debes seleccionar un tipo de anuncio';
-  }
-
-  if (!$vendors_id) {
-
-    $errors[] = 'Debes seleccionar un vendedor';
-  }
-
-  // Image error message
-  $noImages = true;
-
-  if (!empty($propertyImages)) {
-
-    $noImages = false;
-  } elseif (isset($images['name']) && is_array($images['name'])) {
-
-    foreach ($images['name'] as $imageName) {
-
-      if ($imageName) {
-
-        $noImages = false;
-        break;
-      }
-    }
-  }
-
-  if ($noImages) {
-
-    $errors[] = 'Debes agregar al menos una imagen';
-  }
-
-  // Array to store image names
-  $imageNames = [];
-
-  // Limit number of uploaded images to 10
-  $maxImages = 10;
-
-  if (isset($images['name']) && is_array($images['name'])) {
-
-    $numImages = min(count($images['name']), $maxImages);
-  } else {
-
-    $numImages = 0;
-  }
-
-  // define images variable
-  if (isset($_FILES['images']) && is_array($_FILES['images'])) {
-
-    $images = $_FILES['images'];
-  } else {
-
-    var_dump($_FILES['images']);
-    exit;
-  }
-
-  // Check if image variables are defined
-  if (!isset($imageError)) {
-
-    $imageError = 0;
-  }
-
-  if (!isset($imageName)) {
-
-    $imageName = '';
-  }
-
-  if (!isset($imageSize)) {
-
-    $imageSize = 0;
-  }
+  $data = get_object_vars($property);
+  $validation->validateProperty($data, $_FILES, $imageInstances);
+  $errors = $validation->getErrors();
 
   // Valid form
   if (empty($errors)) {
+    // Process old, new and removed images
+    $imageNames = array_column($imageInstances, 'name');
+    $propertyImages = explode(',', $property->images);
 
-    // Iterate over each uploaded image
-    for ($i = 0; $i < $numImages; $i++) {
-
-      // Access individual image properties
-      $imageName = $images['name'][$i];
-      $imageSize = $images['size'][$i];
-      $imageTmpName = $images['tmp_name'][$i];
-      $imageError = $images['error'][$i];
-
-      // Check for upload errors
-      if ($imageError !== 0) {
-
-        $errors[] = 'Hubo un error al cargar la imagen ' . $imageName;
-      } else {
-
-        $maxSize = 1000 * 1000;
-
-        // Validate image size
-        if ($imageSize > $maxSize) {
-
-          $errors[] = 'La imagen ' . $imageName . ' debe tener un tamaño máximo de 1MB';
-        } else {
-
-          $folderImages = '../../images/';
-
-          if (!is_dir($folderImages)) {
-
-            mkdir($folderImages);
-          }
-
-          // Generate unique filename
-          do {
-            $nameImage = substr(md5(uniqid(rand(), true)), 0, 16) . '.jpg';
-
-            // Check if file name already exists in DB
-            if ($type == 1) {
-
-              $query = "SELECT COUNT(*) FROM realestates WHERE images = '$nameImage'";
-              $result = mysqli_query($db, $query);
-              $count = mysqli_fetch_row($result)[0];
-            } elseif ($type == 2) {
-
-              $query = "SELECT COUNT(*) FROM rentals WHERE images = '$nameImage'";
-              $result = mysqli_query($db, $query);
-              $count = mysqli_fetch_row($result)[0];
-            }
-          } while ($count > 0);
-
-          // Upload images
-          move_uploaded_file($imageTmpName, $folderImages . $nameImage);
-
-          // Add image name to array
-          $imageNames[] = $nameImage;
-        }
-      }
-    }
-
-    // Convert image names array to string
-    $imageNamesStr = implode(',', $imageNames);
-
-    // Validate total size of image names string
-    if (strlen($imageNamesStr) > 500) {
-
-      $errors[] = 'El número total de imágenes no debe superar el máximo permitido';
-
-    }
-
-    // Convert $propertyImages and $imageNamesStr into arrays
-    $propertyImagesArray = explode(',', $propertyImages);
-    $imageNamesArray = explode(',', $imageNamesStr);
-
-    // Combine arrays and delete duplicate values
-    $allImagesArray = array_unique(array_merge($propertyImagesArray, $imageNamesArray));
-
-    // Convert combined array into a string
-    $imageNamesStr = implode(',', $allImagesArray);
-    $imageNamesStr = trim($imageNamesStr, ',');
-
-    // Get images names for images to delete
-    $imagesToDelete = $_POST['imagesToDelete'];
-
-    // Convert string into array
-    $imagesToDeleteArray = explode(',', $imagesToDelete);
-
-    // Remove empty strings from the array
-    $imagesToDeleteArray = array_filter($imagesToDeleteArray);
-
-    // Iterate over the array and delete each image from the server
-    foreach ($imagesToDeleteArray as $imageName) {
-
-      unlink($folderImages . $imageName);
-
-    }
-
-    // Convert images string into an array
-    $imagesArray = explode(',', $imageNamesStr);
-
-    // Delete image names of the array
-    $imagesArray = array_diff($imagesArray, $imagesToDeleteArray);
-
-    // Convert resulting array into string
-    $imageNamesStr = implode(',', $imagesArray);
+    $imagesUpload->combineArrays($imageNames, $propertyImages);
+    $imagesUpload->deleteImagesFromPost($_POST, FOLDER_IMAGES);
+    $imageNamesStr = $imagesUpload->processImageNames();
+    $imagesUpload->saveImages($imageInstances, FOLDER_IMAGES, $property);
 
     // Validate for ad type changes
     $typeChanged = ($originalType != $type);
 
     // Query into db
     if ($typeChanged) {
-
       // Delete row registry by correct table
-      if ($originalType == '1') {
-
-        $deleteQuery = "DELETE FROM realestates WHERE id = '$id'";
-      } elseif ($originalType == '2') {
-
-        $deleteQuery = "DELETE FROM rentals WHERE id = '$id'";
-      }
-
-      // Delete from DB
-      $deleteDB = mysqli_query($db, $deleteQuery);
+      $deleteDB = $property->delete($originalType);
 
       // Insert new row registry by ad type change
-      if ($type == '1') {
-
-        $query = "INSERT INTO realestates (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-        VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
-      } elseif ($type == '2') {
-
-        $query = "INSERT INTO rentals (title, currency, price, province, canton, images, description, rooms, wc, parking, date, vendors_id)
-        VALUES ('$title', '$currency', '$price', '$province', '$canton', '$imageNamesStr', '$description', '$rooms', '$wc', '$parking', '$date', '$vendors_id')";
-      }
-
-      // Insert into db
-      $writeDB = mysqli_query($db, $query);
+      $writeDB = $property->insert($type);
 
       if ($writeDB) {
         header("Location:/admin?result=2", true, 303);
         exit;
-
       }
-
     } else {
       // Update row registry into correct table
-      if ($originalType == '1') {
-
-        $updateQuery = "UPDATE realestates SET title='$title', currency='$currency', price='$price',
-          province='$province', canton='$canton', images='$imageNamesStr', description='$description',
-          rooms='$rooms', wc='$wc', parking='$parking', date='$date', vendors_id='$vendors_id' WHERE id = '$id'";
-
-      } elseif ($originalType == '2') {
-
-        $updateQuery = "UPDATE rentals SET title='$title', currency='$currency', price='$price',
-          province='$province', canton='$canton', images='$imageNamesStr', description='$description',
-          rooms='$rooms', wc='$wc', parking='$parking', date='$date', vendors_id='$vendors_id' WHERE id = '$id'";
-
-      }
-
-      // Update DB
-      $updateDB = mysqli_query($db, $updateQuery);
+      $updateDB = $property->update($originalType);
 
       if ($updateDB) {
-
         header("Location:/admin?result=2", true, 303);
         exit;
-
       }
-
     }
-
   }
-
 }
 
 // Send $canton value to app.js to use in fetch canton menu
-echo "<script>var cantonValue = '$canton';</script>";
+cantonValue($canton);
 
 // View Template
 includeTemplate('header');
@@ -484,97 +142,7 @@ includeTemplate('header');
 
   <form class="form" method="POST" enctype="multipart/form-data">
 
-    <fieldset>
-
-      <legend>Información de la Propiedad</legend>
-
-      <label for="title">Título del Anuncio:</label>
-      <input id="title" name="title" type="text" placeholder="Título del Anuncio" value="<?php echo $title; ?>" required>
-
-      <div class="currency-price">
-        <div class="currency-section">
-          <label for="currency">Moneda:</label>
-          <select name="currency" id="currency">
-            <option value="0" disabled selected>-- Seleccionar --</option>
-            <option value="CRC ₡" <?php echo ($currency == 'CRC ₡') ? 'selected' : ''; ?>>Colones-CRC₡</option>
-            <option value="USD $" <?php echo ($currency == 'USD $') ? 'selected' : ''; ?>>Dólares-USD$</option>
-          </select>
-        </div>
-
-        <div class="price-section">
-          <label for="price">Precio:</label>
-          <input id="price" name="price" type="text" value="<?php echo $price; ?>" required>
-        </div>
-      </div>
-
-      <div class="location-section">
-        <div class="location-province">
-          <label for="province">Provincia:</label>
-          <select name="province" id="province">
-            <option value="0" disabled selected>-- Seleccionar --</option>
-            <?php echo $optionsProvince; ?>
-          </select>
-        </div>
-
-        <div class="location-canton">
-          <label for="canton">Cantón:</label>
-          <select name="canton" id="canton">
-            <option value="0" disabled selected>-- Seleccionar --</option>
-          </select>
-          <input type="hidden" id="cantonValue" value="<?php echo $cantonValue; ?>">
-        </div>
-      </div>
-
-      <label for="images">Imágenes:</label>
-      <input id="images" type="file" accept="image/jpeg, image/png" name="images[]" multiple>
-      <p id="image-counter"></p>
-      <div class="thumbnails-container">
-        <?php echo $imagesOutput; ?>
-      </div>
-      <input type="hidden" name="imagesToDelete" id="imagesToDelete" value="">
-
-      <label for="description">Descripción del Anuncio</label>
-      <textarea id="description" name="description"><?php echo $description; ?></textarea>
-
-    </fieldset>
-
-    <fieldset>
-
-      <legend>Características de la Propiedad</legend>
-
-      <label for="rooms">Habitaciones:</label>
-      <input id="rooms" name="rooms" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $rooms; ?>" required>
-
-      <label for="wc">Baños:</label>
-      <input id="wc" name="wc" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $wc; ?>" required>
-
-      <label for="parking">Lugares de Estacionamiento:</label>
-      <input id="parking" name="parking" type="number" placeholder="Ej: 3" min="1" max="9" value="<?php echo $parking; ?>" required>
-
-    </fieldset>
-
-    <fieldset>
-
-      <legend>Información Extra</legend>
-
-      <label>Tipo de anuncio:</label>
-      <select name="type">
-        <option value="0" disabled selected>-- Seleccionar --</option>
-        <option value="1" <?php echo ($type == '1') ? 'selected' : ''; ?>>Venta</option>
-        <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Alquiler</option>
-      </select>
-
-      <label>Vendedor:</label>
-      <select name="vendors_id">
-        <option value="0" disabled selected>-- Seleccionar --</option>
-        <?php while ($row = mysqli_fetch_assoc($answer)) : ?>
-          <option <?php echo $vendors_id === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>">
-            <?php echo $row['id'] . " - " . $row['name'] . " " . $row['lastname']; ?>
-          </option>
-        <?php endwhile; ?>
-      </select>
-
-    </fieldset>
+    <?php require_once '../../includes/templates/formAdmin.php'; ?>
 
     <div class="btnCreate-down">
       <input class="btn-greenInline" type="submit" value="Actualizar">

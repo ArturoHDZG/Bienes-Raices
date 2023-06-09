@@ -1,31 +1,25 @@
 <?php
+// Imports
+require_once 'includes/app.php';
 
-// DB connection
-require_once __DIR__ . '/../config/database.php';
-$db = connectionBD();
+use App\Property;
 
-// Check if limit is set
-if (isset($limit) && is_numeric($limit)) {
-
-  $query = "(SELECT realestates.*, province.province as province_name, canton.canton as canton_name, 'realestates' as source FROM realestates JOIN province ON realestates.province = province.id JOIN canton ON realestates.canton = canton.id ORDER BY date DESC LIMIT $limit) UNION ALL (SELECT rentals.*, province.province as province_name, canton.canton as canton_name, 'rentals' as source FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC LIMIT $limit)";
-
+// Instance
+if ($_SERVER['SCRIPT_NAME'] === '/realestates.php') {
+  $result = Property::allTables();
 } else {
-
-  $query = "(SELECT realestates.*, province.province as province_name, canton.canton as canton_name, 'realestates' as source FROM realestates JOIN province ON realestates.province = province.id JOIN canton ON realestates.canton = canton.id ORDER BY date DESC) UNION ALL (SELECT rentals.*, province.province as province_name, canton.canton as canton_name, 'rentals' as source FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC)";
-
+  $result = Property::limitResults(6);
 }
-
-// DB results
-$result = mysqli_query($db, $query);
 
 ?>
 
 <div class="cards-container">
-  <?php while ($row = mysqli_fetch_assoc($result)) : ?>
 
-    <?php $images = explode(',', $row['images']); ?>
+  <?php foreach ($result as $property) : ?>
 
-    <?php if (!isset($source) || $row['source'] === $source) : ?>
+    <?php $images = explode(',', $property->images); ?>
+
+    <?php if (!isset($source) || $property->source === $source) : ?>
 
       <div class="card">
 
@@ -33,35 +27,36 @@ $result = mysqli_query($db, $query);
 
         <div class="card-content">
 
-          <?php $date = date_create_from_format('Y-m-d', $row['date']); ?>
+          <?php $date = date_create_from_format('Y-m-d', $property->date); ?>
           <p class="text-date">Publicado el <?php echo $date->format('d-m-Y') ?></p>
 
-          <h3><?php echo $row['title'] ?></h3>
+          <h3><?php echo $property->title ?></h3>
 
-          <p>Ubicado en <?php echo $row['province_name'] . ', ' . $row['canton_name']; ?></p>
+          <p>Ubicado en <?php echo $property->province . ', ' . $property->canton; ?></p>
 
-          <p class="price"><?php echo $row['currency'] . number_format($row['price'], 2) ?></p>
+          <p class="price"><?php echo $property->currency . number_format($property->price, 2) ?></p>
 
           <ul class="icons-amenities">
 
             <li>
               <img src="build/img/icono_wc.svg" alt="Icono WC" loading="lazy">
-              <p><?php echo $row['wc'] ?></p>
+              <p><?php echo $property->wc ?></p>
             </li>
 
             <li>
               <img src="build/img/icono_estacionamiento.svg" alt="Icono Parking" loading="lazy">
-              <p><?php echo $row['parking'] ?></p>
+              <p><?php echo $property->parking ?></p>
             </li>
 
             <li>
               <img src="build/img/icono_dormitorio.svg" alt="Icono Habitación" loading="lazy">
-              <p><?php echo $row['rooms'] ?></p>
+              <p><?php echo $property->rooms ?></p>
             </li>
 
           </ul>
 
-          <a href="classifiedad.php?id=<?php echo $row['id'] ?>&source=<?php echo $row['source'] ?>" rel="noopener noreferrer" class="btn-orangeBlock">Ver Anuncio</a>
+          <a href="classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $property->source ?>"
+           rel="noopener noreferrer" class="btn-orangeBlock">Ver Anuncio</a>
 
         </div>
 
@@ -69,13 +64,6 @@ $result = mysqli_query($db, $query);
 
     <?php endif; ?>
 
-  <?php endwhile; ?>
+  <?php endforeach; ?>
 
 </div>
-
-<?php
-
-// Close DB connection
-mysqli_close($db);
-
-?>
