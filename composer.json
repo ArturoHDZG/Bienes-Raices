@@ -1,20 +1,22 @@
 {
-    "name": "arturo/bienes-raices",
-    "description": "Tico Casas Web",
-    "type": "project",
-    "license": "proprietary",
-    "autoload": {
-        "psr-4": {
-            "App\\": "./classes"
-        }
-    },
-    "authors": [
-        {
-            "name": "Arturo Hernandez Garza",
-            "email": "arturo_hdzg@hotmail.com"
-        }
-    ],
-    "require": {
-        "intervention/image": "^2.7"
+  "name": "arturo/bienes-raices",
+  "description": "Tico Casas Web",
+  "type": "project",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "Model\\": "./models"
     }
+  },
+
+  "authors": [
+    {
+      "name": "Arturo Hernandez Garza",
+      "email": "arturo_hdzg@hotmail.com"
+    }
+  ],
+
+  "require": {
+    "intervention/image": "^2.7"
+  }
 }

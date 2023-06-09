@@ -12,7 +12,7 @@ require_once 'config/database.php';
 require_once 'functions.php';
 
 // Classes
-use App\ActiveRecord;
+use Model\ActiveRecord;
 
 // DB Functions
 $db = connectionBD();
