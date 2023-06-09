@@ -7,7 +7,11 @@ class ActiveRecord
   // Database attributes
   protected static $db;
   protected static $table = '';
-  public $id = '';
+  public $id;
+
+  public $source;
+  public $province;
+  public $canton;
 
   public static function setDB($database)
   {
@@ -46,7 +50,62 @@ class ActiveRecord
     return $stmt->execute();
   }
 
-  // List all items
+  // List all items for use in view
+  public static function allTables()
+  {
+    $query =
+    "SELECT realestates.*, province.province
+     AS province_name, canton.canton
+     AS canton_name, 'realestates' as source
+     FROM realestates JOIN province
+     ON realestates.province = province.id
+     JOIN canton ON realestates.canton = canton.id
+     UNION ALL SELECT rentals.*, province.province
+     AS province_name, canton.canton
+     AS canton_name, 'rentals' as source
+     FROM rentals JOIN province ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id";
+
+    $stmt = self::$db->query($query);
+    return self::mapData($stmt);
+  }
+
+  // List all items for use in view
+  public static function limitResults($limit)
+  {
+    $query =
+    "SELECT realestates.*, province.province
+     AS province_name, canton.canton
+     AS canton_name, 'realestates' as source
+     FROM realestates JOIN province
+     ON realestates.province = province.id
+     JOIN canton ON realestates.canton = canton.id
+     UNION ALL SELECT rentals.*, province.province
+     AS province_name, canton.canton
+     AS canton_name, 'rentals' as source
+     FROM rentals JOIN province
+     ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC LIMIT $limit";
+
+    $stmt = self::$db->query($query);
+    return self::mapData($stmt);
+  }
+
+  // List items by Table and ID for use in View
+  public static function findAd($id, $tableName)
+  {
+    $query = "SELECT {$tableName}.*, province.province
+     AS province_name, canton.canton AS canton_name
+     FROM {$tableName} JOIN province
+     ON {$tableName}.province = province.id
+     JOIN canton ON {$tableName}.canton = canton.id WHERE {$tableName}.id = :id";
+
+    $stmt = self::$db->prepare($query);
+    $stmt->execute([':id' => $id]);
+
+    $results = self::mapData($stmt);
+    return array_shift($results);
+  }
+
+  // List all items by table
   public static function all($table)
   {
     $stmt = self::$db->query("SELECT * FROM " . static::$table);
@@ -73,7 +132,24 @@ class ActiveRecord
           $row[$key] = strval($value);
         }
       }
-      $results[] = new static($row);
+
+      $object = new static($row);
+      if (isset($row['source'])) {
+        $object->source = $row['source'];
+      } else {
+        unset($object->source);
+      }
+      if (isset($row['province_name'])) {
+        $object->province = $row['province_name'];
+      } else {
+        unset($object->province);
+      }
+      if (isset($row['canton_name'])) {
+        $object->canton = $row['canton_name'];
+      } else {
+        unset($object->canton);
+      }
+      $results[] = $object;
     }
 
     return $results;

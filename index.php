@@ -30,8 +30,8 @@ includeTemplate('header', $home = true);
           <img src="build/img/icono2.svg" alt="Icono beneficios" loading="lazy">
           <h3>Mejores precios</h3>
           <p>
-            Encuentra casas o alquileres de acuerdo a tu presupuesto y necesidades, puedes comparar entre las opciones para
-            encontrar esa casa o alquiler ideal por tu dinero.
+            Encuentra casas o alquileres de acuerdo a tu presupuesto y necesidades,
+            puedes comparar entre las opciones para encontrar esa casa o alquiler ideal por tu dinero.
           </p>
 
         </div>
@@ -57,7 +57,6 @@ includeTemplate('header', $home = true);
 
       <?php
 
-      $limit = 3;
       $source = 'realestates';
       include 'includes/templates/ads.php';
 
@@ -67,7 +66,6 @@ includeTemplate('header', $home = true);
 
       <?php
 
-      $limit = 3;
       $source = 'rentals';
       include 'includes/templates/ads.php';
 
