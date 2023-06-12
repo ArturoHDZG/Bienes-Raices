@@ -5,7 +5,10 @@
   "license": "proprietary",
   "autoload": {
     "psr-4": {
-      "Model\\": "./models"
+      "MVC\\": "./",
+      "Model\\": "./models",
+      "Views\\": "./views",
+      "Controllers\\": "./controllers"
     }
   },
 

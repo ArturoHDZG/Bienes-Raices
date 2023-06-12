@@ -164,4 +164,12 @@ class ActiveRecord
       }
     }
   }
+
+  public static function getProvinces()
+  {
+    $db = self::$db;
+    $queryProvince = "SELECT * FROM province";
+
+    return $db->query($queryProvince);
+  }
 }

@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Properties extends ActiveRecord
+class RealEstates extends ActiveRecord
 {
   // Misc attributes
   protected static $table = '';
