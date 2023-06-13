@@ -8,6 +8,7 @@ require_once 'config/database.php';
 
 // Functions
 require_once 'functions.php';
+require_once 'functionsUpdate.php';
 
 // Imports
 use Model\ActiveRecord;

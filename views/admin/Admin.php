@@ -74,8 +74,10 @@ class Admin
                 <td><?php echo $property->date; ?></td>
 
                 <td>
-                  <a href="../classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
-                   target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?></a>
+                  <a
+                   href="../classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
+                   target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?>
+                  </a>
                 </td>
 
                 <td>
@@ -96,14 +98,15 @@ class Admin
 
                 <td>
 
-                  <form class="form" method="POST">
+                  <form class="form" method="POST" action="/admin/realestates/delete?type=<?php echo $type; ?>">
                     <input type="hidden" name="id" value="<?php echo $property->id; ?>">
                     <input type="hidden" name="adminIndexType" value="property">
                     <input type="submit" class="btn-redBlock" value="Eliminar">
                   </form>
 
-                  <a class=" btn-orangeBlock" href="management/modify.php?id=<?php echo $property->id; ?>
-              &table_name=<?php echo $tableName; ?>">Modificar</a>
+                  <a class=" btn-orangeBlock"
+                   href="/admin/realestates/update?id=<?php echo $property->id; ?>&table_name=<?php echo $tableName; ?>"
+                  >Modificar</a>
 
                 </td>
 

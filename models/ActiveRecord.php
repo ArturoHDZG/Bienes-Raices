@@ -139,16 +139,15 @@ class ActiveRecord
       } else {
         unset($object->source);
       }
+
       if (isset($row['province_name'])) {
         $object->province = $row['province_name'];
-      } else {
-        unset($object->province);
       }
+
       if (isset($row['canton_name'])) {
         $object->canton = $row['canton_name'];
-      } else {
-        unset($object->canton);
       }
+
       $results[] = $object;
     }
 
