@@ -72,18 +72,21 @@ class ActiveRecord
   // List all items for use in view
   public static function limitResults($limit)
   {
-    $query =
-    "SELECT realestates.*, province.province
-     AS province_name, canton.canton
-     AS canton_name, 'realestates' as source
-     FROM realestates JOIN province
-     ON realestates.province = province.id
-     JOIN canton ON realestates.canton = canton.id
-     UNION ALL SELECT rentals.*, province.province
-     AS province_name, canton.canton
-     AS canton_name, 'rentals' as source
-     FROM rentals JOIN province
-     ON rentals.province = province.id JOIN canton ON rentals.canton = canton.id ORDER BY date DESC LIMIT $limit";
+    $query = "SELECT * FROM (
+      SELECT realestates.*, province.province AS province_name, canton.canton AS canton_name, 'realestates' as source
+      FROM realestates
+      JOIN province ON realestates.province = province.id
+      JOIN canton ON realestates.canton = canton.id
+      ORDER BY date DESC LIMIT $limit
+    ) AS realestates
+    UNION ALL
+    SELECT * FROM (
+      SELECT rentals.*, province.province AS province_name, canton.canton AS canton_name, 'rentals' as source
+      FROM rentals
+      JOIN province ON rentals.province = province.id
+      JOIN canton ON rentals.canton = canton.id
+      ORDER BY date DESC LIMIT $limit
+    ) AS rentals";
 
     $stmt = self::$db->query($query);
     return self::mapData($stmt);

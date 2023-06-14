@@ -4,9 +4,13 @@ namespace Views;
 
 class Layout
 {
+  public static $home;
+
   // Master Page
   public static function layout($content)
   {
+    $home = self::$home;
+
     // Session Check *TEMPORARY*
     if (!isset($_SESSION)) {
 
@@ -63,15 +67,15 @@ class Layout
             <div class="header-darkmode">
               <img class="btn-darkmode" src="/build/img/dark-mode.svg" alt="Icono Modo Oscuro">
               <nav class="navigation" aria-label="Menú Superior">
-                <a href="/about.php" rel="noopener noreferrer">Nosotros</a>
-                <a href="/realestates.php" rel="noopener noreferrer">Anuncios</a>
-                <a href="/blog.php" rel="noopener noreferrer">Blog</a>
-                <a href="/contact.php" rel="noopener noreferrer">Contacto</a>
+                <a href="/about" rel="noopener noreferrer">Nosotros</a>
+                <a href="/classified-ads" rel="noopener noreferrer">Anuncios</a>
+                <a href="/blog" rel="noopener noreferrer">Blog</a>
+                <a href="/contact" rel="noopener noreferrer">Contacto</a>
                 <?php if ($auth) : ?>
-                  <a href="/admin/index.php" rel="noopener noreferrer">Administrar</a>
-                  <a href="/logout.php" rel="noopener noreferrer">Cerrar Sesión</a>
+                  <a href="/admin" rel="noopener noreferrer">Administrar</a>
+                  <a href="/logout" rel="noopener noreferrer">Cerrar Sesión</a>
                 <?php else : ?>
-                  <a href="/login.php" rel="noopener noreferrer">Iniciar Sesión</a>
+                  <a href="/login" rel="noopener noreferrer">Iniciar Sesión</a>
                 <?php endif; ?>
               </nav>
             </div>
@@ -87,10 +91,10 @@ class Layout
       <footer class="footer section">
         <div class="container footer-content">
           <nav class="navigation" aria-label="Menú Inferior">
-            <a href="/about.php" rel="noopener noreferrer">Nosotros</a>
-            <a href="/realestates.php" rel="noopener noreferrer">Anuncios</a>
-            <a href="/blog.php" rel="noopener noreferrer">Blog</a>
-            <a href="/contact.php" rel="noopener noreferrer">Contacto</a>
+            <a href="/about" rel="noopener noreferrer">Nosotros</a>
+            <a href="/classified-ads" rel="noopener noreferrer">Anuncios</a>
+            <a href="/blog" rel="noopener noreferrer">Blog</a>
+            <a href="/contact" rel="noopener noreferrer">Contacto</a>
           </nav>
           <p class="copyright">Tico Casas <?php echo date('Y'); ?>&copy;</p>
           <p class="copyright">Designed by Arturo Hernández Garza</p>

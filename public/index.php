@@ -5,6 +5,7 @@ require_once __DIR__.'/../includes/autoload.php';
 use MVC\AdminRouter;
 use Controllers\AdminController;
 use Controllers\SellersController;
+use Controllers\PagesController;
 
 // Instances
 $adminRouter = new AdminRouter();
@@ -29,6 +30,16 @@ $adminRouter->get('/admin/sellers/update', [SellersController::class, 'update'])
 $adminRouter->post('/admin/sellers/create', [SellersController::class, 'create']);
 $adminRouter->post('/admin/sellers/update', [SellersController::class, 'update']);
 $adminRouter->post('/admin/sellers/delete', [SellersController::class, 'delete']);
+
+// Public URL's
+$adminRouter->get('/', [PagesController::class, 'index']);
+$adminRouter->get('/about', [PagesController::class, 'about']);
+$adminRouter->get('/classified-ads', [PagesController::class, 'classifiedAds']);
+$adminRouter->get('/show-ads', [PagesController::class, 'showAds']);
+$adminRouter->get('/blog', [PagesController::class, 'blog']);
+$adminRouter->get('/blog-entry', [PagesController::class, 'blogEntry']);
+$adminRouter->get('/contact', [PagesController::class, 'contact']);
+$adminRouter->post('/contact', [PagesController::class, 'contact']);
 
 // Check Valid URL's
 $adminRouter->checkPaths();
