@@ -148,6 +148,10 @@ class ActiveRecord
         $object->canton = $row['canton_name'];
       }
 
+      if (!isset($row['province'])) {
+        unset($object->province, $object->canton);
+      }
+
       $results[] = $object;
     }
 

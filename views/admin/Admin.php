@@ -126,6 +126,63 @@ class Admin
 
       </table>
 
+      <h2>Vendedores</h2>
+        <div class="admin-topBtn">
+          <a href="/admin/sellers/create" class="btn-greenInline">Nuevo Vendedor</a>
+        </div>
+
+        <table aria-label="Listado de Propiedades" class="table-list">
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <?php if (empty($resultVendors)) : ?>
+              <tr>
+                <td class="alert error" colspan="6">No se encontraron vendedores</td>
+              </tr>
+            <?php endif; ?>
+
+            <?php foreach ($resultVendors as $vendor) : ?>
+              <tr>
+
+                <td><?php echo $vendor->id; ?></td>
+
+                <td><?php echo $vendor->name . " " . $vendor->lastname; ?></td>
+
+                <td><?php echo $vendor->phone; ?></td>
+
+                <td><?php echo $vendor->email; ?></td>
+
+                <td>
+
+                  <form class="form" method="POST" action="/admin/sellers/delete">
+                    <input type="hidden" name="id" value="<?php echo $vendor->id; ?>">
+                    <input type="hidden" name="adminIndexType" value="vendor">
+                    <input type="submit" class="btn-redBlock" value="Eliminar">
+                  </form>
+
+                  <a class="btn-orangeBlock"
+                   href="/admin/sellers/update?id=<?php echo $vendor->id; ?>">Modificar</a>
+
+                </td>
+
+              </tr>
+
+            <?php endforeach; ?>
+
+          </tbody>
+
+        </table>
+
     </main>
 
     <?php

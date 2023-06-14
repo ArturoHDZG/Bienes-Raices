@@ -49,12 +49,12 @@ class AdminController
       $source = 'rentals';
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // code
-    }
+    // Get vendors
+    $resultVendors = Sellers::all(null);
 
     $router->modelData('\Views\Admin\Admin', [
       'realEstates' => $realEstates,
+      'resultVendors' => $resultVendors,
       'type' => $table,
       'tableName' => $tableName,
       'source' => $source,
