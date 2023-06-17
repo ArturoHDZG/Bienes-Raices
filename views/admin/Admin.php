@@ -31,6 +31,12 @@ class Admin
         <?php endif; ?>
       <?php endif; ?>
 
+      <!-- TODO Si el usuario tiene rol vendedor, solo mostrar sus propiedades subidas y limitar
+      el campo de vendedor para modificar solo sus datos personales -->
+      <!-- TODO en los formularios de bienes raices, si el rol es vendedor solo
+      mostrar en el menu desplegable como vendedor al usuario autenticado -->
+      <!-- TODO el usuario super-admin, debe asignar una contraseña y enviarla por correo al nuevo vendedor registrado
+      para que el vendedor la cambie por una propia -->
       <h2>Propiedades</h2>
       <div class="admin-topBtn">
         <a href="/admin/realestates/create" class="btn-greenInline">Nuevo Anuncio</a>

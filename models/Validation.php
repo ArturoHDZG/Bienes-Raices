@@ -133,7 +133,7 @@ class Validation
     }
   }
 
-  // Vendors validation
+  // Sellers validation
   public function validateVendors($data)
   {
     $this->validateName($data['name'] ?? null);

@@ -301,7 +301,38 @@ function transformText() {
   });
 }
 
-//* DOMContentLoaded controller
+//* Select type of contact from contact form
+function selectContact() {
+  const contactMethod = document.querySelectorAll('input[name="contact[preference]"]')
+
+  if (contactMethod) {
+    contactMethod.forEach(input => input.addEventListener('click', showContactMethod));
+  }
+
+  function showContactMethod(e) {
+    const contactField = document.querySelector('#contact-field');
+
+    if (e.target.value === 'prefer-phone') {
+      contactField.innerHTML = `
+        <input id="phone" name="contact[phone]" type="tel" placeholder="ej. 5555-5555">
+
+        <p>Elija la fecha y la hora para ponerse en contacto con usted:</p>
+
+        <label for="date">Fecha:</label>
+        <input id="date" name="contact[date]" type="date">
+
+        <label for="time">Hora:</label>
+        <input id="time" name="contact[time]" type="time" min="9:00" max="18:00" step="1800">
+      `;
+    } else {
+      contactField.innerHTML = `
+        <input id="email" name="contact[email]" type="email" placeholder="ej. correo@dominio.com">
+      `;
+    }
+  }
+}
+
+//? DOMContentLoaded controller
 document.addEventListener('DOMContentLoaded', function () {
   responsiveMenu();
   darkMode();
@@ -313,4 +344,5 @@ document.addEventListener('DOMContentLoaded', function () {
   initDeleteEvents();
   initImageGallery();
   transformText();
+  selectContact();
 });

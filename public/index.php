@@ -6,6 +6,7 @@ use MVC\AdminRouter;
 use Controllers\AdminController;
 use Controllers\SellersController;
 use Controllers\PagesController;
+use Controllers\AuthController;
 
 // Instances
 $adminRouter = new AdminRouter();
@@ -40,6 +41,11 @@ $adminRouter->get('/blog', [PagesController::class, 'blog']);
 $adminRouter->get('/blog-entry', [PagesController::class, 'blogEntry']);
 $adminRouter->get('/contact', [PagesController::class, 'contact']);
 $adminRouter->post('/contact', [PagesController::class, 'contact']);
+
+// Authentication
+$adminRouter->get('/login', [AuthController::class, 'login']);
+$adminRouter->post('/login', [AuthController::class, 'login']);
+$adminRouter->get('/logout', [AuthController::class, 'logout']);
 
 // Check Valid URL's
 $adminRouter->checkPaths();
