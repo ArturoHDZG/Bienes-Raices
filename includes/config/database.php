@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 class DatabaseConnectionException extends Exception
 {
 }
@@ -9,9 +7,11 @@ class DatabaseConnectionException extends Exception
 // DB connection
 function connectionBD(): PDO
 {
-  $dsn = 'mysql:host=localhost;dbname=tico_casas_db';
-  $username = 'root';
-  $password = 'root';
+  $host = $_ENV['DB_HOST'];
+  $dbname = $_ENV['DB_NAME'];
+  $username = $_ENV['DB_USER'];
+  $password = $_ENV['DB_PASS'];
+  $dsn = "mysql:host=$host;dbname=$dbname";
 
   try {
     $db = new PDO($dsn, $username, $password);

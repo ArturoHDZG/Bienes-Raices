@@ -1,17 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-// URL directions
-define('TEMPLATES_URL', __DIR__ . '/templates');
-define('FUNCTIONS_URL', __DIR__ . 'functions.php');
-define('FOLDER_IMAGES', __DIR__ . '/../images/');
-
-// View templates
-function includeTemplate(string $name, bool $home = false)
-{
-  require_once TEMPLATES_URL . "/{$name}.php";
-}
+// Constant Path
+define('FOLDER_IMAGES', $_SERVER['DOCUMENT_ROOT'] . '/images/');
 
 // Login session
 function login()
@@ -42,7 +32,7 @@ function validateContent($data)
   return in_array($data, $validType);
 }
 
-// Alert messages
+// Alert Messages
 function message($code)
 {
   $message = '';

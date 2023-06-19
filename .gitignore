@@ -1,9 +1,6 @@
-/.vscode
-/build
-/node_modules
-.hintrc
-info.php
-/images
-users.php
-
+/node_modules/
+/.vscode/
 /vendor/
+/src/
+.env
+.hintrc

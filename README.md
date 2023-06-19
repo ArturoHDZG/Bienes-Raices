@@ -4,67 +4,71 @@
 
 ## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
 
-### 0.5.1 (25/04/2023)
+This is the code repository for the "Web Bienes Raíces" project created by ArturoHDZG.
 
-* _html_ to _PHP_ conversion.
-* Templates and initial configs.
+## Technologies Used
 
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.5.0)
+- **SASS**
+- **JavaScript**
+  - *Gulp*
+  - *Modernizr*
+- **PHP**
+  - *Composer*
+  - *Intervention Image*
+- **MySQL**
+  - *Apache*
 
-### 0.5.0 (21/04/2023)
+## Recent Updates
 
-* Finished front.
-* Starting PHP.
+- We have started using **Composer**, **Gulp**, and **Intervention Image** to improve workflow and dependency management.
+- The project is being migrated to an **MVC** architecture to improve code organization and scalability.
 
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.5.0)
+## Installation Guide
 
-### 0.1.0 (17/04/2023)
+### Prerequisites
 
-* Finished _html_ on Inner Pages.
-* Finished **SASS** to Inner Pages.
-* Minor fixes.
+Before installing this project, make sure you have the following software installed on your system:
 
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.1.0)
+- **PHP** version **8.2.3** or higher
+- **MySQL Server** version **8.0.32** or higher
+- **Apache** version **2.4** or higher
+- **Node.js** version **18.12.1** or higher
+- **Composer** version **2.5.5** or higher
 
-### 0.0.4 (12/04/2023)
+### Installation Steps
 
-* Started _html_ on Inner Pages.
-* Started **SASS** to Inner Pages.
-* Finished _about.html_.
+1. Clone the repository from GitHub.
+2. Navigate to the project directory and run `composer install` to install the PHP dependencies.
+3. Run `npm install` to install the Node.js dependencies specified in the `package.json` file.
+4. Open the `php.ini` file and modify the following settings:
+    - `max_execution_time = 300`
+    - `max_input_time = 60`
+    - `memory_limit = 128M`
+    - `post_max_size = 20M`
+    - `default_charset = "UTF-8"`
+    - `file_uploads = On`
+    - `upload_max_filesize = 20M`
+    - `max_file_uploads = 20`
+    - Uncomment the following extensions:
+        - `extension=curl`
+        - `extension=fileinfo`
+        - `extension=gd`
+        - `extension=mbstring`
+        - `extension=mysqli`
+        - `extension=openssl`
+        - `extension=pdo_mysql`
+        - `extension=pdo_pgsql`
+        - `extension=pgsql`
 
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.4)
+### Running the Project
 
-### 0.0.3 (07/04/2023)
+1. Serve the project by navigating to the `/public` directory and running the command `php -S localhost:3000`.
+2. In a separate terminal, run the command `npx gulp` to compile SASS and execute other dependencies.
 
-* Finished homepage _html_.
-* Finished **SASS** to homepage.
-* Finished homepage Blog & Testimonials.
+After completing these steps, your project should be up and running.
 
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.3)
+### Acknowledgments
 
-### 0.0.2 (07/04/2023)
+“This [Padawan](https://github.com/ArturoHDZG) would like to extend special thanks to his brother-in-law and Jedi Master [Sergio Arellano](https://github.com/sarellanomx) for his invaluable guidance, support, and teachings in this project and in my learning journey in general.”
 
-* Updated homepage _html_.
-* Updated **SASS** to homepage.
-* Finished Card section.
-
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.2)
-
-### 0.0.1 (06/04/2023)
-
-* Updated homepage _html_.
-* Updated **SASS** to homepage.
-* Created Card section.
-
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/0.0.1)
-
-### Project Start (04/04/2023)
-
-* Added homepage and inner pages.
-* Added default favicons.
-* Added structural **SASS**.
-* Basic _CSS_.
-* Added inner _html_ pages.
-* Added **modernizr**.
-
-See project progress [here](https://github.com/ArturoHDZG/Bienes-Raices/releases/tag/Start)
+If you encounter any issues during installation or execution, please create an issue in one of my GitHub repositories and mention me using "@" followed by my username. I will be notified and will respond to your issue as soon as possible.

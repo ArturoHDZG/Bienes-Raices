@@ -1,6 +1,6 @@
 <?php
 // Imports
-require_once '../app.php';
+require_once __DIR__ . '/../autoload.php';
 
 // Get the selected province id from the URL
 $selectedProvinceId = $_GET['province_id'];
