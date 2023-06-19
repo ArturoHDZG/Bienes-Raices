@@ -37,6 +37,8 @@ class Admin
       mostrar en el menu desplegable como vendedor al usuario autenticado -->
       <!-- TODO el usuario super-admin, debe asignar una contraseña y enviarla por correo al nuevo vendedor registrado
       para que el vendedor la cambie por una propia -->
+      <!-- TODO Permitir al usuario elegir foto de portada del anuncio y separar
+      las imágenes de cada anuncio en una carpeta -->
       <h2>Propiedades</h2>
       <div class="admin-topBtn">
         <a href="/admin/realestates/create" class="btn-greenInline">Nuevo Anuncio</a>
@@ -81,7 +83,7 @@ class Admin
 
                 <td>
                   <a
-                   href="../classifiedad.php?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
+                   href="/show-ads?id=<?php echo $property->id ?>&source=<?php echo $source ?>"
                    target="_blank" rel="noopener noreferrer"><?php echo $property->title; ?>
                   </a>
                 </td>
