@@ -1,7 +1,6 @@
 # Bienes-Raíces
 
-![Bienes Raíces](https://github.com/ArturoHDZG/Bienes-Raices/assets/110303654/a91a8c99-2443-4bb5-801c-890aeff9680f)
-
+![Tico Casas](https://github.com/ArturoHDZG/Bienes-Raices/assets/110303654/a10037ce-ca91-46ed-8966-28cf4c146730)
 
 ## Visit site [here](https://ticocasas.domcloud.io/)
 
