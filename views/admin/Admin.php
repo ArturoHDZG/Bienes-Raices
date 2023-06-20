@@ -48,7 +48,7 @@ class Admin
         <a href="/admin/realestates/create" class="btn-greenInline">Nuevo Anuncio</a>
       </div>
 
-      <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="GET">
+      <form class="form" action="/admin" method="GET">
 
         <label>Tipo de anuncio:</label>
         <select class="type-admin" name="type">

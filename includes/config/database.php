@@ -11,7 +11,7 @@ function connectionBD(): PDO
   $dbname = $_ENV['DB_NAME'];
   $username = $_ENV['DB_USER'];
   $password = $_ENV['DB_PASS'];
-  $dsn = "mysql:host=$host;dbname=$dbname";
+  $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
   try {
     $db = new PDO($dsn, $username, $password);

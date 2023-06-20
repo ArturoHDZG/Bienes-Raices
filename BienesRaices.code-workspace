@@ -1,0 +1,64 @@
+{
+	"folders": [
+		{
+			"name": "BienesRaices",
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"Arellano",
+			"autoload",
+			"classifiedad",
+			"comilla",
+			"compat",
+			"cssnano",
+			"darkmode",
+			"ERRMODE",
+			"eventlisteners",
+			"fileinfo",
+			"filesize",
+			"gulpfile",
+			"homecontact",
+			"innerpages",
+			"lastname",
+			"lowersection",
+			"mailtrap",
+			"mbstring",
+			"modernizr",
+			"mysqli",
+			"openssl",
+			"Padawan",
+			"pgsql",
+			"phpmailer",
+			"raices",
+			"Raices",
+			"realestate",
+			"realestates",
+			"showad",
+			"showimage",
+			"showrealestate",
+			"showrealestates",
+			"SMTPS",
+			"Sossa",
+			"tico",
+			"Tico",
+			"topbar",
+			"webp"
+		],
+		"sqltools.connections": [
+			{
+				"mysqlOptions": {
+					"authProtocol": "default"
+				},
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 3306,
+				"driver": "MySQL",
+				"name": "Tico Casas",
+				"username": "root",
+				"database": "tico_casas_db"
+			}
+		]
+	}
+}

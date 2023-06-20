@@ -60,6 +60,14 @@ Before installing this project, make sure you have the following software instal
         - `extension=pdo_pgsql`
         - `extension=pgsql`
 
+## Importing the Database
+
+To import the database, follow these steps:
+
+1. Open your database client and connect to your local database server.
+2. Create a new database with the name `tico_casas_db`.
+3. Select the newly created database and run the `tico_casas_db.sql` file to import the data.
+
 ### Running the Project
 
 1. Serve the project by navigating to the `/public` directory and running the command `php -S localhost:3000`.

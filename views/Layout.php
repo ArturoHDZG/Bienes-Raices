@@ -4,6 +4,7 @@ namespace Views;
 
 // TODO Crear mensaje con el nombre del vendedor conectado
 // TODO crear un campo para cambiar el idioma de la pagina
+// TODO agregar botones de redes sociales
 
 class Layout
 {
@@ -34,16 +35,24 @@ class Layout
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Compra y venta de Bienes Raíces">
+      <meta name="description" content="Compra, venta y alquiler de bienes raíces en Costa Rica.
+       Encuentra tu propiedad ideal con nosotros.">
       <meta name="author" content="Arturo Hernández">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:site" content="@arturo_hdzg">
       <meta name="twitter:creator" content="@arturo_hdzg">
-      <meta property="og:title" content="Bienes Raíces">
-      <meta property="og:description" content="Compra y venta de Bienes Raíces">
-      <meta property="og:image" content="La url de tu imagen.jpg">
-      <meta property="og:url" content="https://arturohdzg.github.io/página">
+      <meta name="twitter:title" content="Bienes Raíces Tico Casas">
+      <meta name="twitter:description" content="Compra, venta y alquiler de bienes raíces en Costa Rica.
+       Encuentra tu propiedad ideal con nosotros.">
+      <meta name="twitter:image" content="https://ticocasas.domcloud.io/images/Tico-Casas-Preview.jpg">
+      <meta property="og:title" content="Bienes Raíces Tico Casas">
+      <meta property="og:description" content="Compra, venta y alquiler de bienes raíces en Costa Rica.
+       Encuentra tu propiedad ideal con nosotros.">
+      <meta property="og:image" content="https://ticocasas.domcloud.io/images/Tico-Casas-Preview.jpg">
+      <meta property="og:url" content="https://ticocasas.domcloud.io/">
       <meta property="og:type" content="website">
+      <meta name="keywords" content="bienes raíces, real estate, Costa Rica, compra, buy, venta, sale,
+       alquiler, rent, propiedades, properties">
       <meta name="msapplication-TileColor" content="#2d89ef">
       <meta name="msapplication-TileImage" content="/favicon/mstile-144x144.png">
       <meta name="theme-color" content="#ffffff">
