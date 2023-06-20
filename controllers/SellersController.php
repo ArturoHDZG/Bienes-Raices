@@ -40,12 +40,12 @@ class SellersController
       }
     }
 
-    $router->modelData('\Views\Admin\Sellers\Create', [
+    $router->modelData('\Views\admin\sellers\Create', [
       'vendor' =>
        ($_SERVER['REQUEST_METHOD'] == 'POST') ? $vendor : $seller,
       'errors' => $errors
     ]);
-    $content = \Views\Admin\Sellers\Create::getContent();
+    $content = \Views\admin\sellers\Create::getContent();
     $router->render($content);
   }
 
@@ -90,12 +90,12 @@ class SellersController
       }
     }
 
-    $router->modelData('\Views\Admin\Sellers\Update', [
+    $router->modelData('\Views\admin\sellers\Update', [
       'vendor' =>
        ($_SERVER['REQUEST_METHOD'] == 'POST') ? $vendor : $seller,
       'errors' => $errors
     ]);
-    $content = \Views\Admin\Sellers\Update::getContent();
+    $content = \Views\admin\sellers\Update::getContent();
     $router->render($content);
   }
 

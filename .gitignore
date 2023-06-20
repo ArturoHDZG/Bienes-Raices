@@ -1,6 +1,5 @@
 /node_modules/
 /.vscode/
 /vendor/
-/src/
 .env
 .hintrc

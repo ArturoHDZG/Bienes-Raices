@@ -2,6 +2,8 @@
 
 namespace Views\Auth;
 
+// TODO Crear sistema para recuperar contraseñas y crear roles (super-admin y vendedores)
+
 class Login
 {
   // Save Model Content
@@ -23,7 +25,6 @@ class Login
 
     <main class="container section content-center">
 
-      <!-- TODO Crear sistema para recuperar contraseñas y crear roles (super-admin y vendedores) -->
       <h1>Iniciar Sesión</h1>
 
       <?php foreach ($errors as $error): ?>

@@ -2,8 +2,12 @@
 
 namespace Views\Pages;
 
+// TODO Crear Botón Tipo de Anuncio y navegación limitada a mostrar cada 10 resultados
+// TODO Crear campo de Búsqueda, Filtro de Anuncios, (Locación, Tipo de Anuncio)
+// TODO Crear sistema para ordenar resultados por precio, numero de habitaciones, etc,.
+
 // Imports
-use Views\Pages\Ads;
+use Views\pages\Ads;
 
 class ClassifiedAds
 {
@@ -26,10 +30,6 @@ class ClassifiedAds
 
     <main class="container section">
 
-      <!-- TODO Crear Botón Tipo de Anuncio y navegación limitada a mostrar cada 10 resultados -->
-      <!-- TODO Crear campo de Búsqueda, Filtro de Anuncios,
-      (Locación, Tipo de Anuncio) -->
-      <!-- TODO Crear sistema para ordenar resultados por precio, numero de habitaciones, etc,. -->
       <h2>Anuncios</h2>
 
       <?php Ads::ads($data); ?>

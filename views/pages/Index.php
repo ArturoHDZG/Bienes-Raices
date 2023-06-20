@@ -3,8 +3,8 @@
 namespace Views\Pages;
 
 // Imports
-use Views\Pages\Ads;
-use Views\Pages\Icons;
+use Views\pages\Ads;
+use Views\pages\Icons;
 
 class Index
 {

@@ -3,7 +3,7 @@
 namespace Views\Pages;
 
 // Imports
-use Views\Pages\Icons;
+use Views\pages\Icons;
 
 class About
 {

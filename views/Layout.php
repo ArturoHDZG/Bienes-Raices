@@ -2,6 +2,9 @@
 
 namespace Views;
 
+// TODO Crear mensaje con el nombre del vendedor conectado
+// TODO crear un campo para cambiar el idioma de la pagina
+
 class Layout
 {
   public static $home;
@@ -65,8 +68,6 @@ class Layout
               <img src="/build/img/barras.svg" alt="Icono Menú">
             </div>
             <div class="header-darkmode">
-            <!-- TODO Crear mensaje con el nombre del vendedor conectado -->
-            <!-- TODO crear un campo para cambiar el idioma de la pagina -->
               <img class="btn-darkmode" src="/build/img/dark-mode.svg" alt="Icono Modo Oscuro">
               <nav class="navigation" aria-label="Menú Superior">
                 <a href="/about" rel="noopener noreferrer">Nosotros</a>

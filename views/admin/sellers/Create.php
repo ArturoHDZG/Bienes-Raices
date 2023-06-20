@@ -3,7 +3,7 @@
 namespace Views\Admin\Sellers;
 
 // Imports
-use Views\Admin\Sellers\Form;
+use Views\admin\sellers\Form;
 
 class Create
 {

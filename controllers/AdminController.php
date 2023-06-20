@@ -52,7 +52,7 @@ class AdminController
     // Get vendors
     $resultVendors = Sellers::all(null);
 
-    $router->modelData('\Views\Admin\Admin', [
+    $router->modelData('\Views\admin\Admin', [
       'realEstates' => $realEstates,
       'resultVendors' => $resultVendors,
       'type' => $table,
@@ -61,7 +61,7 @@ class AdminController
       'code' => $code
     ]);
 
-    $content = \Views\Admin\Admin::getContent();
+    $content = \Views\admin\Admin::getContent();
     $router->render($content);
   }
 
@@ -128,7 +128,7 @@ class AdminController
       }
     }
 
-    $router->modelData('\Views\Admin\RealEstates\Create', [
+    $router->modelData('\Views\admin\realestates\Create', [
       'property' =>
        ($_SERVER['REQUEST_METHOD'] == 'POST') ? $property : $realEstate,
       'type' =>
@@ -141,7 +141,7 @@ class AdminController
       'canton' => $canton,
       'errors' => $errors
     ]);
-    $content = \Views\Admin\RealEstates\Create::getContent();
+    $content = \Views\admin\realestates\Create::getContent();
     $router->render($content);
   }
 
@@ -223,7 +223,7 @@ class AdminController
     // Send Canton Value to JS
     cantonValue($canton);
 
-    $router->modelData('\Views\Admin\RealEstates\Update', [
+    $router->modelData('\Views\admin\realestates\Update', [
       'property' =>
        ($_SERVER['REQUEST_METHOD'] == 'POST') ? $property : $oldProperty,
       'type' =>
@@ -237,7 +237,7 @@ class AdminController
       'canton' => $canton,
       'errors' => $errors
     ]);
-    $content = \Views\Admin\RealEstates\Update::getContent();
+    $content = \Views\admin\realestates\Update::getContent();
     $router->render($content);
   }
 

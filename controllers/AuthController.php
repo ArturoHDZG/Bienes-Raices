@@ -45,10 +45,10 @@ class AuthController
       }
     }
 
-    $router->modelData('\Views\Auth\Login', [
+    $router->modelData('\Views\auth\Login', [
       'errors' => $errors
     ]);
-    $content = \Views\Auth\Login::getContent();
+    $content = \Views\auth\Login::getContent();
     $router->render($content);
   }
 

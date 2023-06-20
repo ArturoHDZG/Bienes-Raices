@@ -17,18 +17,18 @@ class PagesController
     // Index Unique Header
     $home = true;
 
-    $router->modelData('\Views\Pages\Index', [
+    $router->modelData('\Views\pages\Index', [
       'result' => $result,
       'home' => $home
     ]);
-    $content = \Views\Pages\Index::getContent();
+    $content = \Views\pages\Index::getContent();
     $router->render($content);
   }
 
   public static function about(AdminRouter $router)
   {
-    $router->modelData('\Views\Pages\About', []);
-    $content = \Views\Pages\About::getContent();
+    $router->modelData('\Views\pages\About', []);
+    $content = \Views\pages\About::getContent();
     $router->render($content);
   }
 
@@ -37,10 +37,10 @@ class PagesController
     // Instance
     $result = RealEstates::allTables();
 
-    $router->modelData('\Views\Pages\ClassifiedAds', [
+    $router->modelData('\Views\pages\ClassifiedAds', [
       'result' => $result
     ]);
-    $content = \Views\Pages\ClassifiedAds::getContent();
+    $content = \Views\pages\ClassifiedAds::getContent();
     $router->render($content);
   }
 
@@ -60,24 +60,24 @@ class PagesController
 
     $property = RealEstates::findAd($id, $source);
 
-    $router->modelData('\Views\Pages\ShowAds', [
+    $router->modelData('\Views\pages\ShowAds', [
       'property' => $property
     ]);
-    $content = \Views\Pages\ShowAds::getContent();
+    $content = \Views\pages\ShowAds::getContent();
     $router->render($content);
   }
 
   public static function blog(AdminRouter $router)
   {
-    $router->modelData('\Views\Pages\Blog', []);
-    $content = \Views\Pages\Blog::getContent();
+    $router->modelData('\Views\pages\Blog', []);
+    $content = \Views\pages\Blog::getContent();
     $router->render($content);
   }
 
   public static function blogEntry(AdminRouter $router)
   {
-    $router->modelData('\Views\Pages\BlogEntry', []);
-    $content = \Views\Pages\BlogEntry::getContent();
+    $router->modelData('\Views\pages\BlogEntry', []);
+    $content = \Views\pages\BlogEntry::getContent();
     $router->render($content);
   }
 
@@ -168,12 +168,12 @@ class PagesController
       }
     }
 
-    $router->modelData('\Views\Pages\Contact', [
+    $router->modelData('\Views\pages\Contact', [
       'message' => $message,
       'messageError1' => $messageError1,
       'messageError2' => $messageError2
     ]);
-    $content = \Views\Pages\Contact::getContent();
+    $content = \Views\pages\Contact::getContent();
     $router->render($content);
   }
 }

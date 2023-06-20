@@ -2,6 +2,8 @@
 
 namespace Views\Pages;
 
+// TODO Agregar campo para almacenar el ID de la propiedad y enviar correo al vendedor de la publicación
+
 class Contact
 {
   // Save Model Content
@@ -22,7 +24,6 @@ class Contact
 
     <main class="container section content-center">
 
-      <!-- TODO Agregar campo para almacenar el ID de la propiedad y enviar correo al vendedor de la publicación -->
       <h1>Contacto</h1>
 
       <?php if($message) : ?>

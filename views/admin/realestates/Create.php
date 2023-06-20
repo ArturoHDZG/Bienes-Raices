@@ -3,7 +3,7 @@
 namespace Views\Admin\RealEstates;
 
 // Imports
-use Views\Admin\RealEstates\Form;
+use Views\admin\realestates\Form;
 
 class Create
 {

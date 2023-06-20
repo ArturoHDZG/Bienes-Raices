@@ -2,6 +2,9 @@
 
 namespace Views\Pages;
 
+// TODO En el botón submit agregar vendor-id del anuncio para pasarlo al formulario de contacto
+// TODO agregar api Google Translate para traducir los anuncios a otro idioma
+
 class ShowAds
 {
   // Save Model Content
@@ -26,8 +29,6 @@ class ShowAds
         <a href="/classified-ads" rel="noopener noreferrer" class="btn-orangeInline">Regresar</a>
       </div>
 
-      <!-- TODO En el botón submit agregar vendor-id del anuncio para pasarlo al formulario de contacto -->
-      <!-- TODO agregar api Google Translate para traducir los anuncios a otro idioma -->
       <h1><?php echo $property->title ?></h1>
 
       <?php $images = explode(',', $property->images); ?>

@@ -2,6 +2,8 @@
 
 namespace Views\Pages;
 
+// TODO Ordenar entradas del Blog por mas reciente y crear una navegación con limite de 10 entradas
+
 class Blog
 {
   // Save Model Content
@@ -22,7 +24,6 @@ class Blog
 
     <main class="container section content-center">
 
-      <!-- TODO Ordenar entradas del Blog por mas reciente y crear una navegación con limite de 10 entradas -->
       <h1>Nuestro Blog</h1>
 
       <article class="blog-entry">
