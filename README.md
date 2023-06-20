@@ -1,8 +1,9 @@
 # Bienes-Raíces
 
-![Bienes Raíces](https://user-images.githubusercontent.com/110303654/229857645-0b1f852b-6a14-4272-aefb-36431a4acba8.png)
+![Bienes Raíces](https://github.com/ArturoHDZG/Bienes-Raices/assets/110303654/a91a8c99-2443-4bb5-801c-890aeff9680f)
 
-## Visit site [here](https://github.com/ArturoHDZG/Bienes-Raices)
+
+## Visit site [here](https://ticocasas.domcloud.io/)
 
 This is the code repository for the "Web Bienes Raíces" project created by ArturoHDZG.
 
@@ -60,7 +61,7 @@ Before installing this project, make sure you have the following software instal
         - `extension=pdo_pgsql`
         - `extension=pgsql`
 
-## Importing the Database
+### Importing the Database
 
 To import the database, follow these steps:
 
