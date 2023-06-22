@@ -80,3 +80,11 @@ After completing these steps, your project should be up and running.
 “This [Padawan](https://github.com/ArturoHDZG) would like to extend special thanks to his brother-in-law and Jedi Master [Sergio Arellano](https://github.com/sarellanomx) for his invaluable guidance, support, and teachings in this project and in my learning journey in general.”
 
 If you encounter any issues during installation or execution, please create an issue in one of my GitHub repositories and mention me using "@" followed by my username. I will be notified and will respond to your issue as soon as possible.
+
+## License
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
